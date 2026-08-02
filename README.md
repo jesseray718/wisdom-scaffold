@@ -1,6 +1,14 @@
 # OpenRoot Wisdom Scaffold
 
-> "Every contribution lifts the next climber. Hoarding breaks the scaffold."
+## Table of Contents
+
+- [Philosophy](#philosophy)
+- [Installation](#installation-termux-on-android)
+- [Git diff](#git-diff)
+- [Context state](#context-state)
+- [Terminal log](#terminal-log)
+
+> "Every contribution lifts the next climber. Hoarding breakas the scaffold."
 
 A living, open-source ecosystem blending ancient wisdom (Scripture, Sun Tzu, Permaculture, Buckminster Fuller) with modern computation to build resilient, self-healing systems.
 
