@@ -3,8 +3,8 @@
 import json, os, subprocess
 from datetime import datetime
 
-base = '/data/data/com.termux/files/home/une'
-seed_dir = '/sdcard/openroot/session_seeds'
+base = 'os.path.expanduser("~") + "/"une'
+seed_dir = 'os.environ.get("OPENROOT_BASE", "/sdcard/openroot") + "/"session_seeds'
 os.makedirs(seed_dir, exist_ok=True)
 
 now = datetime.now()
@@ -17,13 +17,13 @@ diff = subprocess.run(['git','-C',base,'diff','HEAD'], capture_output=True, text
 # Context state
 ctx = {}
 try:
-    with open('/sdcard/openroot/context_bridge/context.json','r') as f:
+    with open('os.environ.get("OPENROOT_BASE", "/sdcard/openroot") + "/"context_bridge/context.json','r') as f:
         ctx = json.load(f)
 except:
     pass
 
 # Terminal log
-log_path = '/storage/emulated/0/Documents/terminal-logs/auto_' + now.strftime('%Y%m%d_%H%M%S') + '.log'
+log_path = 'os.environ.get("ANDROID_STORAGE", "/storage/emulated/0") + "/"Documents/terminal-logs/auto_' + now.strftime('%Y%m%d_%H%M%S') + '.log'
 term_log = ''
 try:
     with open(log_path,'r') as f:

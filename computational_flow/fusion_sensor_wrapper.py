@@ -40,10 +40,10 @@ def primitive_check():
     return "Fallback: Local manual check passed"
 
 # --- RUN FUSION LOGIC ---
-sys.path.insert(0, "/data/data/com.termux/files/home/une/computational_flow")
+sys.path.insert(0, "os.path.expanduser("~") + "/"une/computational_flow")
 from fusion_core import FusionSystem
 
-ctx_path = "/sdcard/openroot/context_bridge/context.json"
+ctx_path = "os.environ.get("OPENROOT_BASE", "/sdcard/openroot") + "/"context_bridge/context.json"
 os.makedirs(os.path.dirname(ctx_path), exist_ok=True)
 
 ws = FusionSystem("RealSensorMonitor", primitive_check, modern_check, ctx_path)
