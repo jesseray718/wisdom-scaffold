@@ -35,3 +35,12 @@ __pycache__/
 # Submodules
 >>>>>>> origin/main
 meta_hub/
+.ssh
+*.pem
+*.key
+__pycache__
+.syncthing.*.tmp
+ENDOFBRIDGE
+session_seeds
+ledger/live
+context_bridge/context.json
