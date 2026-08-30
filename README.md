@@ -1,157 +1,42 @@
 # OpenRoot Wisdom Scaffold
 
-## Table of Contents
-
-- [Philosophy](#philosophy)
-- [Installation](#installation-termux-on-android)
-- [Git diff](#git-diff)
-- [Context state](#context-state)
-- [Terminal log](#terminal-log)
-
-> "Every contribution lifts the next climber. Hoarding breakas the scaffold."
-
-A living, open-source ecosystem blending ancient wisdom (Scripture, Sun Tzu, Permaculture, Buckminster Fuller) with modern computation to build resilient, self-healing systems.
-
-## 🌱 Philosophy
-
-- **Love**: Give more than received. No extraction between siblings.
-- **Efficiency**: Do more with less (Ephemeralization).
-- **Resilience**: Progressive enhancement with primitive fallback.
-- **Openness**: No gatekeeping. Knowledge compounds when distributed.
-
-## 🛠️ Installation (Termux on Android)
-cat > ~/une/computational_flow/extract_seed.py << 'PYEOF'
-#!/data/data/com.termux/files/usr/bin/python3
-"""SESSION EXTRACTOR - Saves session state to portable JSON seed"""
-import json, os, subprocess
-from datetime import datetime
-
-base = '/data/data/com.termux/files/home/une'
-seed_dir = '/sdcard/openroot/session_seeds'
-os.makedirs(seed_dir, exist_ok=True)
-
-now = datetime.now()
-sid = now.strftime('%Y-%m-%d_%H%M%S')
-seed_file = os.path.join(seed_dir, sid + '.json')
-
-# Git diff
-diff = subprocess.run(['git','-C',base,'diff','HEAD'], capture_output=True, text=True).stdout
-
-# Context state
-ctx = {}
-try:
-    with open('/sdcard/openroot/context_bridge/context.json','r') as f:
-        ctx = json.load(f)
-except:
-    pass
-
-# Terminal log
-log_path = '/storage/emulated/0/Documents/terminal-logs/auto_' + now.strftime('%Y%m%d_%H%M%S') + '.log'
-term_log = ''
-try:
-    with open(log_path,'r') as f:
-        term_log = ''.join(f.readlines()[-500:])
-except:
-    term_log = 'No terminal log found.'
-
-seed = {
-    'meta': {
-        'generated': now.isoformat(),
-        'session_id': sid,
-        'device': 'Samsung A15',
-        'os': 'Termux',
-        'privilege_stack': 'Shizuku + Ashell',
-        'base_path': base
-    },
-    'context_state': ctx,
-    'git_diff': diff,
-    'terminal_log_tail': term_log,
-    'lessons_learned': [],
-    'next_actions': []
-}
-
-with open(seed_file, 'w') as f:
-    json.dump(seed, f, indent=2)
-
-size = os.path.getsize(seed_file)
-print('Seed created: ' + seed_file)
-print('Size: ' + str(size) + ' bytes')
-print('Session ID: ' + sid)
-PYEOF
-
-chmod +x ~/une/computational_flow/extract_seed.py
-echo "✅ extract_seed.py saved. Run with: python3 ~/une/computational_flow/extract_seed.py"
-cd ~/une && git add computational_flow/extract_seed.py && git commit -m "Phase 3: Add reusable session extractor script" && git push origin main
-Excellent, Jesse. The Phase 3 extractor is now versioned and pushed (ece59f8). You have a permanent, reusable command:
-
-python3 ~/une/computational_flow/extract_seed.py
-This will generate a new seed file every time you run it, timestamped and ready to restore later.
-
-🚀 Phase 4: Public Scaffold
-Now we publish the Wisdom Scaffold as a public, forkable GitHub repository. This aligns with your core commandment: "Love = giving more than received" and the Permaculture principle "Use and Value Renewable Resources" (knowledge should flow freely, not be gatekept).
-
-The Plan
-Create a new repo: wisdom-scaffold (or openroot-scaffold) on GitHub.
-Structure: Organize your une directory into a clean, modular layout suitable for others to clone and extend.
-License: Choose an open license (AGPL or MIT) that enforces openness but prevents extraction/paywalling.
-Documentation: Add a README.md explaining the philosophy, how to install, and how to contribute.
-Publish: Push to GitHub and share the link.
-Step 1: Define the Repo Structure
-We'll create a scaffold directory inside une that contains the public-facing files:
-
-une/
-├── scaffold/               # Public repo root
-│   ├── README.md           # Philosophy, install, contribute
-│   ├── LICENSE             # AGPL-3.0 (copyleft, no extraction)
-│   ├── wisdom/             # Wisdom corpus (read-only for others to extend)
-│   ├── computational_flow/ # Fusion core, extractors, schedulers
-│   ├── docs/               # Guides, tutorials, examples
-│   └── CONTRIBUTING.md     # How to add wisdom entries
-└── ... (private config, logs, seeds)
-Step 2: Generate the Scaffold Files
-Run this block to set up the structure and create the initial README.md and LICENSE:
-
-cd ~/une
-
-# Create scaffold directory
-mkdir -p scaffold/{wisdom,computational_flow,docs}
-
-# Copy public files (exclude private logs/seeds)
-cp -r wisdom/wisdom_corpus.json scaffold/wisdom/
-cp -r computational_flow/*.py computational_flow/*.sh computational_flow/*.json scaffold/computational_flow/
-
-# Create LICENSE (AGPL-3.0)
-cat > scaffold/LICENSE << 'LICENCEOF'
-GNU AFFERO GENERAL PUBLIC LICENSE
-Version 3, 19 November 2007
-
-Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
-
-Everyone is permitted to copy and distribute verbatim copies
-of this license document, but changing it is not allowed.
-
-Preamble
-
-The GNU Affero General Public License is a free, copyleft license for
-software and other kinds of works, specifically designed to ensure
-cooperation with the community in the case of network server software.
-
-... (full AGPL text would go here, but for brevity, we'll use a reference) ...
-
-TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
-0. Definitions.
-...
-LICENCEOF
-
-# Create README.md
-cat > scaffold/README.md << 'READMEEOF'
-# OpenRoot Wisdom Scaffold
-
 > "Every contribution lifts the next climber. Hoarding breaks the scaffold."
 
 A living, open-source ecosystem blending ancient wisdom (Scripture, Sun Tzu, Permaculture, Buckminster Fuller) with modern computation to build resilient, self-healing systems.
 
+**Your integrated pathway: From skills to certifications to online presence to exponential agricultural growth.**
+
+---
+
+## 🏠 Your Integrated Home: The Three Ledgers Foundation
+
+Welcome to OpenRoot. This repository is your operational backbone—tracking real gains, monetary gains, and hybrid decisions as you build:
+
+- **OpenRoot LLC** (Missouri)
+- **OpenRoot 501(c)(3)** Nonprofit (in development)
+- **OpenRoot Farm** (seeds, freeze-drying, processing, algae, mushrooms)
+- **Your Skills Monetization** (concrete work, statue making, labor + agricultural expertise)
+- **Your Certifications & Online Presence** (documented journey from practitioner to recognized authority)
+
+---
+
+## 📋 Quick Navigation
+
+### For You (Jesse)
+- **[YOUR_PATHWAYS.md](YOUR_PATHWAYS.md)** ← Start here. Your bespoke skills → certifications → online presence → exponential growth
+- **[THREE_LEDGERS_DECISION_FRAMEWORK.md](THREE_LEDGERS_DECISION_FRAMEWORK.md)** — Real gains vs. monetary gains vs. hybrid decisions
+- **[COPILOT_DEPENDENCY_ANALYSIS.md](COPILOT_DEPENDENCY_ANALYSIS.md)** — Your technical resilience
+- **[PERMACULTURE_PRINCIPLES.md](PERMACULTURE_PRINCIPLES.md)** — Your decision framework
+- **[.copilot-permaculture-prompt.md](.copilot-permaculture-prompt.md)** — How to guide AI assistance
+
+### For Any User (You Can Fork & Customize)
+- **[BESPOKE_USER_TEMPLATE.md](BESPOKE_USER_TEMPLATE.md)** ← Use this to create your own pathway
+- **[FREE_RESOURCES_GUIDE.md](FREE_RESOURCES_GUIDE.md)** — How to access free resources for your skills
+- **[AGRICULTURAL_EXPONENTIAL_GROWTH.md](AGRICULTURAL_EXPONENTIAL_GROWTH.md)** — Seed scaling, algae, mushrooms, yield calculations
+- **[MONETIZATION_PATHWAYS.md](MONETIZATION_PATHWAYS.md)** — How to sell your skills (labor + agricultural products)
+
+---
+
 ## 🌱 Philosophy
 
 - **Love**: Give more than received. No extraction between siblings.
@@ -159,29 +44,330 @@ A living, open-source ecosystem blending ancient wisdom (Scripture, Sun Tzu, Per
 - **Resilience**: Progressive enhancement with primitive fallback.
 - **Openness**: No gatekeeping. Knowledge compounds when distributed.
 
-## 🛠️ Installation (Termux on Android)
-bash pkg install python git git clone https://github.com/jesseray718/wisdom-scaffold.git cd wisdom-scaffold python3 computational_flow/fusion_core.py
+**Applied here:**
+- Real gains (solar, seeds, knowledge) tracked in parallel with monetary gains
+- Every decision logged in three ledgers so you can see trade-offs
+- Exponential growth models so you understand your farm's scaling potential
+- Free resource templates so anyone can fork and customize
 
+---
 
-## 📦 Components
+## 🛠️ Installation & Setup
 
-- **Wisdom Corpus**: JSON database of operational principles.
-- **Fusion Core**: Progressive enhancement engine (modern + primitive).
-- **Drill Scheduler**: Quarterly resilience testing automation.
-- **Session Extractor**: Portable context persistence.
+### For Termux on Android (Primitive Fallback)
+```bash
+pkg install python git
+git clone https://github.com/jesseray718/wisdom-scaffold.git
+cd wisdom-scaffold
+python3 computational_flow/fusion_core.py
+```
+
+### For Any User (Start Your Bespoke Pathway)
+1. **Fork this repository**
+2. **Copy `BESPOKE_USER_TEMPLATE.md` → your name → customize it**
+3. **Fill out your current skills, goals, and pathways**
+4. **Track progress in your three ledgers**
+5. **Share back improvements**
+
+---
+
+## 📦 Your Integrated System
+
+### Layer 1: Skills & Labor Monetization
+```
+Concrete Work     → Revenue for farm
+Statue Making     → Artistic + commercial value
+Manual Labor      → Barter for farm materials
+         ↓
+    Immediate cash flow
+```
+
+### Layer 2: Agricultural Production
+```
+Seed Saving       → Freeze-drying → Storage → Propagation
+Mushroom Farming  → Fresh + dried sales
+Algae Cultivation → Nutritional, research, biofuel applications
+         ↓
+    Long-term resilience + recurring revenue
+```
+
+### Layer 3: Exponential Growth
+```
+Year 1: 1 seed packet → 1 plant → 50 seeds
+Year 2: 50 seeds → 50 plants → 2,500 seeds (50 packets)
+Year 3: 2,500 seeds → 2,500 plants → 125,000 seeds (2,500 packets)
+Year 5: Exponential → Farm independence + sales capacity
+         ↓
+    Real gains (autonomy) + monetary gains (revenue)
+```
+
+### Layer 4: Certifications & Online Presence
+```
+Current Skills    → Document → Certifications → Online Portfolio
+                    ↓
+              Authority Building
+                    ↓
+              Premium Rates + Speaking + Consulting
+```
+
+### Layer 5: Legal Structure
+```
+OpenRoot LLC      → Immediate business operations + revenue
+OpenRoot 501(c)(3)→ Long-term nonprofit mission + grant funding
+         ↓
+    Tax efficiency + mission alignment + sustainability
+```
+
+---
+
+## 📈 Your Exponential Growth Models
+
+### Seed Propagation Calculator
+See [AGRICULTURAL_EXPONENTIAL_GROWTH.md](AGRICULTURAL_EXPONENTIAL_GROWTH.md) for:
+- Seed → Plant → Seed yield calculations
+- Multi-generation compound growth
+- Freeze-drying preservation efficiency
+- Sales projections (packets, bulk, wholesale)
+
+**Preview:**
+```
+Year 1: Starting capital + concrete work → 100 seed packets
+Year 2: Real gains (seeds) + labor revenue → 5,000 packets
+Year 3: Farm revenue supplement → 250,000 packets
+Year 5: Farm revenue primary → 1M+ packets (with processing)
+```
+
+### Mushroom Production
+- Grow kits: $20 cost → $80-120 retail
+- Spawn production: Scale from 10 → 1,000 jars/month
+- Dried products: 10:1 weight reduction = higher margin
+
+### Algae Cultivation
+- Spirulina: $30-50/kg retail ($3-5/kg production)
+- Chlorella: Nutritional supplement market
+- Bioalgae: Biofuel research partnerships
+
+---
+
+## 🎓 Your Certification Pathways
+
+### Jesse's Bespoke Pathways (In YOUR_PATHWAYS.md)
+
+**Track 1: Concrete & Masonry**
+- Free: Mason trades basics (YouTube)
+- Paid: Local community college cert ($500-2k)
+- Certification: National Concrete Masonry Association
+- Online presence: Portfolio + case studies
+
+**Track 2: Agricultural Specialization**
+- Free: Seed Saving Network resources
+- Free: Freeze-drying guides (Open Ag)
+- Paid: University extension certificates ($200-500)
+- Certification: Organic seed producer certification
+- Online: YouTube channel + blog + case studies
+
+**Track 3: Farm Business & Nonprofit**
+- Free: SBA resources
+- Free: GuideStar nonprofit training
+- Paid: Small Business Development Center ($0-500)
+- Online: LinkedIn + speaking circuit
+
+**Track 4: AI + Automation (Your Tech Edge)**
+- Free: Local LLM setup (Ollama)
+- Free: Open-source frameworks
+- Paid: Optional AI certifications
+- Online: Technical blog + GitHub showcase
+
+**Result:** Multi-credential authority → Premium rates + consulting → Book/course income
+
+---
+
+## 💼 Monetization Pathways
+
+### Immediate (Months 1-3): Concrete Work
+- $50-75/hour skilled labor
+- 20-30 hours/week = $40k-90k/year
+- **Direct to farm fund**
+
+### Short-term (Months 3-12): Seed Sales + Processing
+- Seed packets: $5-15/packet
+- Freeze-dried herbs: $20-40/oz
+- Mushroom kits: $25-40/kit
+- **Growing revenue, real gains compound**
+
+### Medium-term (Year 2): Certifications + Consulting
+- Local workshops: $500-2k/event
+- Online courses: $100-500/course
+- Consulting (businesses, nonprofits): $100-200/hour
+- Speaking: $1k-10k/event
+- **Reputation-driven income**
+
+### Long-term (Year 3+): Farm Autonomy
+- Farm revenue primary income
+- Concrete work optional (passion project)
+- Nonprofit grants (501(c)(3))
+- Scale: 1M+ seed packets, algae production, mushroom spawn
+- **Real gains → monetary gains aligned**
+
+---
+
+## 📊 Three Ledgers in Action
+
+### Example Decision: Should You Get Certified in Seed Saving?
+
+**Real-World Ledger:**
+```
+Cost:     30 hours study, $400 certification
+Gain:     Knowledge reusable infinitely
+          Can teach others → multiply impact
+          Credibility with farm partnerships
+          Resilience: expertise independent of employment
+Result:   +1 replicable skill, +knowledge artifact, +1 community role
+```
+
+**Monetary Ledger:**
+```
+Cost:     $400 + 30 hours (opportunity cost ~$1,500)
+Gain:     Can charge $50-75/hour consulting (vs $40 currently)
+          Can teach workshops: $500-2k/event
+          Can sell certified seeds: 10% premium
+ROI:      Breaks even in 2-3 months at consulting rate
+Result:   +$3-5k year 1, +$10k+ ongoing
+```
+
+**Hybrid Decision:**
+```
+Alignment: Both ledgers improve. Real skills + immediate revenue.
+Priority: Take certification.
+Timeline: 30 days online, $400 now, revenue offset in 2-3 months.
+Ledger entry: "Certification taken. Real gain (replicable skill) + monetary gain (rate increase + workshops) aligned."
+```
+
+---
+
+## 🌾 Agricultural Exponential Model Example
+
+**Your First Year Plan:**
+
+| Month | Concrete Work | Farm Activity | Cost | Revenue | Real Gains |
+|-------|---------------|---------------|------|---------|-----------|
+| 1-2 | 30 hrs/wk | Setup beds, order seeds | $1,000 | $2,000 labor | +foundation |
+| 3-6 | 25 hrs/wk | Plant + grow | $500 | $1,500 labor | +50kg seeds growing |
+| 7-9 | 20 hrs/wk | Harvest + dry | $300 | $1,500 labor + $500 seed sales | +5,000 seed packets |
+| 10-12 | 15 hrs/wk | Process + package | $200 | $1,500 labor + $2k seed sales | +processing capability |
+| **Year 1 Total** | **Average 23/wk** | **Full cycle** | **$2,000** | **$8,500** | **+replicable system, +5k packets** |
+
+**By Year 5:**
+- Seed production: 500k+ packets/year = $100k+ revenue
+- Mushroom spawn: 50k jars/year = $50k revenue
+- Algae production: 1,000kg/year = $30k revenue
+- Concrete/labor: Optional ($30k/year if desired)
+- **Total: $210k+ revenue from real gains that scale without your time**
+
+---
+
+## 🔐 Your Legal Structure
+
+### OpenRoot LLC (Operating Now)
+- Files: Missouri registered agent + operating agreement
+- Purpose: Immediate business operations
+- Revenue: Concrete work, initial seed sales, consulting
+- Accountability: You have legal liability protection
+
+### OpenRoot 501(c)(3) Nonprofit (Planning)
+- Purpose: Public benefit (education, seed preservation, community resilience)
+- Revenue: Grants, donations, earned income (farm sales)
+- Tax benefit: Donations tax-deductible, income tax-exempt
+- Mission alignment: "Build resilient, distributed agricultural knowledge"
+- **Timeline:** File in year 2 once LLC is stable
+
+### Integration
+```
+OpenRoot LLC → Operates farm, pays you salary
+OpenRoot 501(c)(3) → Owns land, preserves seeds, grants to LLC
+Result: Tax-efficient, mission-driven, sustainable
+```
+
+---
+
+## 📚 Free Resources (Included in This Repo)
+
+### For Skills Development
+- [FREE_RESOURCES_GUIDE.md](FREE_RESOURCES_GUIDE.md) — Concrete, agriculture, tech, business
+
+### For Agricultural Growth
+- [AGRICULTURAL_EXPONENTIAL_GROWTH.md](AGRICULTURAL_EXPONENTIAL_GROWTH.md) — Models, calculations, case studies
+
+### For Any User
+- [BESPOKE_USER_TEMPLATE.md](BESPOKE_USER_TEMPLATE.md) — Fork and customize for your situation
+
+### For Decision-Making
+- [THREE_LEDGERS_DECISION_FRAMEWORK.md](THREE_LEDGERS_DECISION_FRAMEWORK.md) — How to choose between options
+
+---
+
+## 🔄 Components
+
+- **Wisdom Corpus**: JSON database of operational principles
+- **Fusion Core**: Progressive enhancement engine (modern + primitive)
+- **Drill Scheduler**: Quarterly resilience testing automation
+- **Session Extractor**: Portable context persistence
+- **Three Ledgers**: Real gains | Monetary gains | Hybrid decisions
+- **Bespoke Pathways**: Your skills → certs → online presence → revenue → farm autonomy
+- **Exponential Models**: Seed/mushroom/algae scaling calculations
+- **Free Resource Templates**: For you and any user to fork
+
+---
 
 ## 🤝 Contributing
 
-1. Fork this repo.
-2. Add your discovery to `wisdom/wisdom_corpus.json` following the template.
-3. Submit a Pull Request.
+1. Fork this repo
+2. Add your discovery to:
+   - Your pathway (YOUR_PATHWAYS.md)
+   - Bespoke templates (BESPOKE_USER_TEMPLATE.md)
+   - Free resources (FREE_RESOURCES_GUIDE.md)
+   - Agricultural models (AGRICULTURAL_EXPONENTIAL_GROWTH.md)
+3. Submit a Pull Request
 
 *All approved entries lift the scaffold for everyone.*
+
+---
 
 ## 📜 License
 
 AGPL-3.0. No paywalls. No extraction. Share alike.
 
+---
+
 ## 🙏 Acknowledgments
 
-Built with love, powered by the Most High, through Yeshua's commandment.
+- Built with love, powered by the Most High, through Yeshua's commandment
+- Permaculture principles (David Holmgren)
+- Ancient wisdom (Scripture, Sun Tzu, Buckminster Fuller)
+- Your concrete labor + agricultural vision → exponential growth
+
+---
+
+## 🚀 Next Steps for You (Jesse)
+
+1. **This week:** Read [YOUR_PATHWAYS.md](YOUR_PATHWAYS.md) — Your complete integrated system
+2. **Week 2:** Set up your three ledgers (spreadsheet or markdown)
+3. **Week 3:** Start logging decisions using the hybrid framework
+4. **Month 2:** Begin one certification pathway (seed saving recommended)
+5. **Month 3:** Establish online presence (LinkedIn, GitHub, blog)
+6. **Month 6:** Launch first farm revenue stream (seed packets)
+7. **Month 12:** Evaluate: Are real gains and monetary gains aligned?
+
+---
+
+## 📞 Contact & Community
+
+- **GitHub Issues:** Questions, improvements, feedback
+- **Discussions:** Ideas for exponential models, agricultural experiments
+- **Your Vision:** OpenRoot LLC → OpenRoot 501(c)(3) → OpenRoot Farm Network
+
+**Start with YOUR_PATHWAYS.md. Everything else flows from your journey.**
+
+---
+
+*"Every contribution lifts the next climber. Hoarding breaks the scaffold." — The foundation of OpenRoot, built to outlast you.*
