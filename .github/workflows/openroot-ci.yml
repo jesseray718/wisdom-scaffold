@@ -14,7 +14,7 @@ jobs:
 
       - name: Validate foundational files
         run: |
-          for f in PATH_INVENTORY.yaml .coderabbit.yaml .github/copilot-instructions.md .github/CODEOWNERS; do
+          for f in PATH_INVENTORY.yaml .coderabbit.yaml .github/copilot-instructions.md .github/CODEOWNERS .github/workflows/openroot-ci.yml; do
             if [ ! -f "$f" ]; then
               echo "::error::$f missing — foundational nervous system incomplete"
               exit 1
