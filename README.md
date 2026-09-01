@@ -319,6 +319,27 @@ Result: Tax-efficient, mission-driven, sustainable
 
 ---
 
+## 🛰️ Cathedral Status: Repo Structure Audit (Report-Only)
+
+`cathedral-status.sh` (repo root) cross-references your own, non-forked GitHub
+repositories against a small set of documentation/structure conventions
+(README, CONTRIBUTING, governance, roadmap, issue route, license, CodeRabbit,
+Dependabot applicability) and writes a plain-language `.txt` report plus a
+spreadsheet-friendly `.csv` report — with no writes to GitHub, ever.
+
+```bash
+# Validate the script without any network access or GitHub auth:
+/home/jesse/wisdom-scaffold/cathedral-status.sh --self-test
+
+# Real run against your own repos (requires `gh auth login` first):
+/home/jesse/wisdom-scaffold/cathedral-status.sh --output /home/jesse/cathedral-reports
+```
+
+See `cathedral-status.sh --help` for all options, including an optional
+`LLM_CMD` hook to draft suggestions for missing items using a local model.
+
+---
+
 ## 🤝 Contributing
 
 1. Fork this repo
