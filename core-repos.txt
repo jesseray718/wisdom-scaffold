@@ -1,0 +1,10 @@
+# OpenRoot Core Repositories — Cathedral Uplift Allowlist
+# Lines starting with # are ignored. One repo name per line.
+# These repos are eligible for structure audit.
+# Forks and archived repos are always REPORT_ONLY; no modifications suggested.
+
+fractallattice
+openroot
+wisdom-scaffold
+AeroCement_Ecosystem
+skills-introduction-to-github
