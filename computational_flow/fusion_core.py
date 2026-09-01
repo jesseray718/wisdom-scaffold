@@ -55,7 +55,7 @@ class FusionSystem:
         print("[FUSION-" + self.name + "] " + event_type + ": " + message)
 
 if __name__ == "__main__":
-    ctx_path = "os.environ.get("OPENROOT_BASE", "/sdcard/openroot") + "/"context_bridge/context.json"
+    ctx_path = os.environ.get("OPENROOT_BASE", "/sdcard/openroot") + "/context_bridge/context.json"
     os.makedirs(os.path.dirname(ctx_path), exist_ok=True)
 
     def modern_fail():
