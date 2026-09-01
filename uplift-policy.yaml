@@ -1,0 +1,284 @@
+---
+# CATHEDRAL UPLIFT POLICY v1.0
+# OpenRoot three-ledger decision framework applied to repository structure audit
+#
+# Purpose: Classify repository documentation health and decision clarity
+# without modifying any external repos or GitHub settings.
+#
+# Context: Real gains (resilient, documented systems) vs. monetary gains (shipping speed)
+# vs. hybrid (both aligned). This audit surfaces where decisions are needed.
+
+name: "cathedral-status uplift policy"
+version: "1.0"
+schema: "https://openroot.dev/cathedral-uplift/v1"
+author: "@jesseray718"
+created_at: "2026-09-01T00:00:00Z"
+
+# ============================================================================
+# SEVERITY LEVELS: How to interpret each classification
+# ============================================================================
+
+severity_levels:
+  HEALTHY:
+    description: "Core documentation present (README, CONTRIBUTING, GOVERNANCE, ROADMAP, ISSUE_TEMPLATE, LICENSE). No action required."
+    priority: "none"
+    color: "green"
+    action: "Monitor. Share as template."
+    ledger_note: "Real gains: documentation complete. Resilient, discoverable, contribution-ready."
+
+  REVIEW_RECOMMENDED:
+    description: "Core documentation incomplete. One or more required docs missing (README, CONTRIBUTING, GOVERNANCE, ROADMAP, ISSUE_TEMPLATE)."
+    priority: "low"
+    color: "yellow"
+    action: "Draft missing docs. Use local LLM suggestion if available."
+    ledger_note: "Real gains incomplete. Improved docs reduce onboarding friction and enable community contribution."
+
+  DECISION_REQUIRED:
+    description: "Core documentation present; license status unclear or undetected (SPDX unrecognized or NONE). Requires human choice."
+    priority: "medium"
+    color: "orange"
+    action: "Choose license (MIT, GPL-3.0, Apache-2.0, AGPL-3.0, etc). Do not auto-assign."
+    ledger_note: "Decision point: licensing strategy (open-source, proprietary, dual) aligns with real-gains or monetary-gains priority."
+
+  REPORT_ONLY:
+    description: "Repository is a fork or archived. Classified in audit but never modified; no changes suggested."
+    priority: "none"
+    color: "gray"
+    action: "None. Document as reference or archive state."
+    ledger_note: "Not original work. No decision burden. For reference only."
+
+# ============================================================================
+# CORE CLASSIFICATION RULES
+# ============================================================================
+
+rules:
+  forks:
+    match: "repository.fork == true"
+    result: "REPORT_ONLY"
+    reason: "Fork of another repository; not treated as original work per OpenRoot policy"
+    never_modify: true
+
+  archived:
+    match: "repository.archived == true"
+    result: "REPORT_ONLY"
+    reason: "Repository is archived; report-only, no changes suggested"
+    never_modify: true
+
+  licenses:
+    match: "license.spdx_id == 'NONE' OR license.spdx_id == null"
+    result: "DECISION_REQUIRED (if all core docs present)"
+    reason: "License status needs human decision; cannot auto-detect intent"
+    examples:
+      - "MIT (permissive, commercial-friendly, no attribution required)"
+      - "GPL-3.0 (copyleft, requires derivatives to share license)"
+      - "Apache-2.0 (permissive, explicit patent grant)"
+      - "AGPL-3.0 (copyleft, covers networked software)"
+
+# ============================================================================
+# DOCUMENTATION CANDIDATES: What we look for
+# ============================================================================
+
+doc_candidates:
+  README:
+    files: ["README.md", "README"]
+    purpose: "Project overview, quick start, vision"
+    required: true
+
+  CONTRIBUTING:
+    files: ["CONTRIBUTING.md", "CONTRIBUTING"]
+    purpose: "Contribution guidelines, code of conduct, workflow"
+    required: true
+
+  GOVERNANCE:
+    files: ["CODE_OF_CONDUCT.md", "CONTRIBUTORS.md", "GOVERNANCE.md"]
+    purpose: "Governance, decision-making, conflict resolution"
+    required: true
+
+  ROADMAP:
+    files: ["ROADMAP.md", "docs/ROADMAP.md", "NEXT.md", "STATUS.md", "docs/roadmap"]
+    purpose: "Planned work, milestones, vision clarity"
+    required: true
+
+  ISSUE_TEMPLATE:
+    files: [".github/ISSUE_TEMPLATE"]
+    purpose: "Bug/feature request structure for low-friction reporting"
+    required: true
+
+  CODERABBIT:
+    files: [".coderabbit.yaml"]
+    purpose: "AI-assisted code review configuration (optional automation)"
+    required: false
+    automation_type: "optional"
+    note: "Absence is not a defect; presence enables automated review suggestions"
+
+  DEPENDABOT:
+    files: [".github/dependabot.yml"]
+    purpose: "Automated dependency updates (only if dependency manifest present)"
+    required: false
+    automation_type: "optional"
+    applicability: "only_if_dep_manifest"
+    note: "Only applicable if package.json, requirements.txt, pyproject.toml, Pipfile, Gemfile, go.mod, Cargo.toml, or pom.xml exists"
+
+# ============================================================================
+# DEPENDENCY MANIFESTS (triggers Dependabot applicability)
+# ============================================================================
+
+dependency_manifests:
+  - "package.json"
+  - "requirements.txt"
+  - "pyproject.toml"
+  - "Pipfile"
+  - "Gemfile"
+  - "go.mod"
+  - "Cargo.toml"
+  - "pom.xml"
+
+# ============================================================================
+# OPTIONAL AUTOMATION NOTES
+# ============================================================================
+
+optional_automation:
+  CODERABBIT:
+    severity: "low"
+    type: "code_review"
+    cost: "free tier available"
+    note: "Missing: OPTIONAL_AUTOMATION (not a defect)"
+
+  DEPENDABOT:
+    severity: "low"
+    type: "dependency_updates"
+    cost: "free (GitHub-native)"
+    applicability: "only if dependency manifest present"
+    note: |
+      Missing dependency manifest → Dependabot NOT_APPLICABLE
+      Missing .github/dependabot.yml + has manifest → OPTIONAL_AUTOMATION
+
+# ============================================================================
+# LOCAL MODEL SUGGESTION PROMPT
+# ============================================================================
+
+llm_suggestion:
+  enabled_if: "LLM_CMD environment variable is set and executable"
+  trigger_on: "REVIEW_RECOMMENDED (missing core docs)"
+  prompt_template: |
+    You are an OpenRoot cathedral assistant. A repository is missing documentation.
+    
+    Repository: {owner}/{name}
+    Missing: {missing_docs}
+    Context: Three-ledger decision framework: build real gains (documented resilience, low onboarding friction).
+    
+    Draft short, plain-language suggested content for each missing doc:
+    1. If CONTRIBUTING: suggest contribution workflow, code style, review process
+    2. If GOVERNANCE: suggest decision-making, conflict resolution, community roles
+    3. If ROADMAP: suggest 3-6 month milestones and decision points
+    4. If ISSUE_TEMPLATE: suggest bug and feature request structure
+    5. If README: suggest quick-start, links to other docs, vision statement
+    
+    Do not invent complex structure. Aim for 3-5 sentences per doc, link to examples.
+    Do not invent license text; recommend human choice (MIT, GPL-3.0, Apache-2.0, AGPL-3.0).
+    
+    Output as markdown.
+
+  output_location: "suggestions/{timestamp}/{repo_name}.md"
+  never_modify_github: true
+
+# ============================================================================
+# REPORT OUTPUT
+# ============================================================================
+
+report:
+  formats:
+    - type: "txt"
+      name: "cathedral-status-{timestamp}.txt"
+      content: |
+        CATHEDRAL STATUS UPLIFT REPORT
+        Three-Ledger Decision Framework Applied
+        
+        [Header: owner, timestamp, policy version, allowlist used]
+        [Grouping by severity: HEALTHY, REVIEW_RECOMMENDED, DECISION_REQUIRED, REPORT_ONLY]
+        [Summary: count by category, decisions needed, notes on optional automation]
+
+    - type: "csv"
+      name: "cathedral-status-{timestamp}.csv"
+      content: "repo, classification, severity, reason, fork, archived, license, missing_docs, notes, decisions_needed"
+
+  grouping: "by_severity_level"
+  include_policy_version: true
+  include_allowlist_name: true
+
+# ============================================================================
+# NEXT STEPS (Guidance for Human Review)
+# ============================================================================
+
+next_steps:
+  HEALTHY:
+    - "Monitor for drift. Re-audit annually."
+    - "Share as template for other repos."
+    - "Consider for leadership role in community."
+
+  REVIEW_RECOMMENDED:
+    - "Draft missing docs (use LLM suggestions if available)."
+    - "Prioritize CONTRIBUTING and GOVERNANCE (lowest friction)."
+    - "Link from README to new docs."
+    - "Re-run uplift after 1 month."
+
+  DECISION_REQUIRED:
+    - "Choose a license (see examples under 'licenses' rule)."
+    - "If proprietary: close to public contributions, restrict issue templates."
+    - "If open-source: choose copyleft (GPL-3.0, AGPL-3.0) or permissive (MIT, Apache-2.0)."
+    - "Document choice in README and LICENSE file."
+    - "Confirm SPDX ID is recognized: https://spdx.org/licenses"
+    - "Re-run uplift to confirm HEALTHY status."
+
+  REPORT_ONLY:
+    - "No action required. For reference only."
+    - "If fork: consider archiving if no longer tracking upstream."
+    - "If archived: move to 'archive' directory for housekeeping."
+
+# ============================================================================
+# THREE-LEDGER INTERPRETATION
+# ============================================================================
+
+three_ledgers:
+  real_gains: |
+    Documented repos are more resilient, easier to contribute to, and enable knowledge transfer.
+    Each missing doc = onboarding friction = less community contribution = lower real gains.
+    License clarity = enables replication without legal risk = higher real gains.
+
+  monetary_gains: |
+    Well-documented repos attract more users, contributors, and partnerships.
+    Clear governance = reduced conflict cost = faster decision-making.
+    Transparent license = removes negotiation friction = faster sales cycles.
+
+  hybrid: |
+    A HEALTHY repo aligns real and monetary gains: resilient + scalable.
+    A REVIEW_RECOMMENDED repo requires investment (doc time) but pays off (community velocity).
+    A DECISION_REQUIRED repo blocks hybrid alignment; license choice determines path forward.
+    A REPORT_ONLY repo has no decision burden (fork/archive).
+
+# ============================================================================
+# OPTIEPLEX RULES (Local Context)
+# ============================================================================
+
+optiplex_rules:
+  context: "OptiPlex3060 (jesse@optiplex3060) — primary development workstation"
+  paths:
+    wisdom_scaffold: "/home/jesse/wisdom-scaffold"
+    cathedral_reports: "/home/jesse/cathedral-reports"
+    models: "/home/jesse/models"
+
+  audit_frequency: "monthly (every new moon or quarterly review)"
+  audit_trigger: "after PR merge, major feature addition, or policy update"
+
+  safe_mode_only: "Never modify external repos or GitHub settings from uplift."
+  report_location: "Always write to local /home/jesse/cathedral-reports (not in version control)"
+
+# ============================================================================
+# VERSION HISTORY
+# ============================================================================
+
+version_history:
+  "1.0":
+    date: "2026-09-01"
+    changes: "Initial version. Cathedral uplift formalized as three-ledger policy."
+    author: "@jesseray718"
