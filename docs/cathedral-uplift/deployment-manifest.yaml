@@ -1,3 +1,5 @@
+copilot/create-batch-deployment-script
+=======
  copilot/add-license-and-documentation
 version: 1
 source: /home/runner/work/wisdom-scaffold/wisdom-scaffold/cathedral-status.sh
@@ -40,6 +42,7 @@ targets:
   une: [CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
   wisdom-scaffold: [GOVERNANCE.md, ROADMAP.md]
 =======
+main
 ---
 # CATHEDRAL DOCUMENTATION DEPLOYMENT MANIFEST
 # Generated from cathedral-status.sh audit (REVIEW_RECOMMENDED classification)
@@ -436,4 +439,7 @@ repos:
       - template: "ROADMAP.md"
         target: "ROADMAP.md"
 
+copilot/create-batch-deployment-script
+
  main
+main
