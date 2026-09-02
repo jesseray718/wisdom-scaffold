@@ -337,6 +337,8 @@ spreadsheet-friendly `.csv` report — with no writes to GitHub, ever.
 
 See `cathedral-status.sh --help` for all options, including an optional
 `LLM_CMD` hook to draft suggestions for missing items using a local model.
+Reusable, documentation-only deployment materials are in
+[`docs/cathedral-uplift/`](/home/runner/work/wisdom-scaffold/wisdom-scaffold/docs/cathedral-uplift/README.md).
 
 ---
 
