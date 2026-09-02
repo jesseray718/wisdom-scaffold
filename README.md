@@ -394,3 +394,6 @@ AGPL-3.0. No paywalls. No extraction. Share alike.
 ---
 
 *"Every contribution lifts the next climber. Hoarding breaks the scaffold." — The foundation of OpenRoot, built to outlast you.*
+
+## Knowledge Integration
+See `docs/knowledge/`.
