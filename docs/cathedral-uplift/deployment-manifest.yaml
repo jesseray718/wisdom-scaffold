@@ -1,0 +1,396 @@
+---
+# CATHEDRAL DOCUMENTATION DEPLOYMENT MANIFEST
+# Generated from cathedral-status.sh audit (REVIEW_RECOMMENDED classification)
+# Consumed by deploy-cathedral-docs.sh
+#
+# Rules:
+# - Forked and archived repos are NEVER included here (report-only per uplift-policy.yaml)
+# - "license" key present + true means an AGPL-3.0 LICENSE file should be added
+# - "files" lists template -> target path mappings, relative to docs/cathedral-uplift/
+
+schema: "https://openroot.dev/cathedral-uplift/deployment-manifest/v1"
+owner: "jesseray718"
+default_branch: "main"
+commit_message: "docs: add cathedral documentation (governance, roadmap, contributing, issue templates)"
+license_source: "LICENSE"  # AGPL-3.0, copied from wisdom-scaffold root when a repo needs one
+
+repos:
+  - name: "aerocement"
+    description: "AeroCement (AR-GFRC) appropriate-technology materials research and formulation notes."
+    license: false
+    files:
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "aerocement-calc"
+    description: "Calculators and mix-ratio tooling for AeroCement (AR-GFRC) formulations."
+    license: false
+    files:
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "AeroCement_Ecosystem"
+    description: "Ecosystem hub for AeroCement (AR-GFRC) materials, tooling, and documentation."
+    license: false
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "agape-coordination"
+    description: "Coordination layer for the Agape (R=1.0) fractal swarm governance model."
+    license: false
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "agape-crossover-key"
+    description: "Cryptographic/key-exchange primitives for Agape network crossover protocols."
+    license: true
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "agape-ipfs"
+    description: "IPFS integration layer for Agape network content distribution."
+    license: false
+    files:
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "agape-primitives"
+    description: "Core primitives and shared building blocks for the Agape network."
+    license: true
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "agape-une"
+    description: "Agape network integration for the UNE (Universal Node Environment) protocol."
+    license: false
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "agapenet"
+    description: "Agape network reference implementation: R=1.0 fractal swarm mesh networking."
+    license: true
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "agaperesonance"
+    description: "Resonance/consensus signaling layer for the Agape network."
+    license: true
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "axiom-library"
+    description: "Shared library of axioms and foundational primitives used across OpenRoot projects."
+    license: true
+    files:
+      - template: "project-README.md"
+        target: "README.md"
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "black-locust-rmh"
+    description: "Black Locust Rocket Mass Heater (RMH) design and build documentation."
+    license: false
+    files:
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "canonical"
+    description: "Canonical reference definitions and schemas for the OpenRoot ecosystem."
+    license: true
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "etaledger"
+    description: "Eta (efficiency) ledger: tracks useful_joules / human_joules across OpenRoot systems."
+    license: true
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "fractallattice"
+    description: "Fractal lattice governance and coordination structures (base-6 swarm model)."
+    license: true
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "jesseray718"
+    description: "Personal GitHub profile repository."
+    license: false
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "OpenCell-Thermal-System"
+    description: "Open-cell thermal system design and documentation."
+    license: false
+    files:
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "openroot-canon"
+    description: "Canonical texts, decisions, and reference documents for the OpenRoot project."
+    license: false
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "openroot-foundation"
+    description: "Foundational documents and scaffolding for the OpenRoot 501(c)(3) nonprofit."
+    license: false
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "openroot-spoke-template"
+    description: "Template repository for new OpenRoot spoke nodes."
+    license: false
+    files:
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+
+  - name: "openroot-thesis"
+    description: "Thesis and long-form rationale documents underpinning OpenRoot."
+    license: false
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "oscillation-mesh"
+    description: "Oscillation-based mesh networking research and prototypes."
+    license: true
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "renaissance-protocol"
+    description: "Renaissance protocol: knowledge-sharing and revival framework for appropriate technology."
+    license: false
+    files:
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "skills-introduction-to-github"
+    description: "GitHub Skills exercise repository."
+    license: false
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "und-protocol"
+    description: "UND protocol reference implementation."
+    license: false
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "une"
+    description: "Universal Node Environment (UNE) reference implementation."
+    license: false
+    files:
+      - template: "CONTRIBUTING.md"
+        target: "CONTRIBUTING.md"
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+      - template: "ISSUE_TEMPLATE/bug_report.md"
+        target: ".github/ISSUE_TEMPLATE/bug_report.md"
+      - template: "ISSUE_TEMPLATE/feature_request.md"
+        target: ".github/ISSUE_TEMPLATE/feature_request.md"
+
+  - name: "wisdom-scaffold"
+    description: "Living, open-source ecosystem blending ancient wisdom with modern computation for resilient systems."
+    license: false
+    files:
+      - template: "GOVERNANCE.md"
+        target: "GOVERNANCE.md"
+      - template: "ROADMAP.md"
+        target: "ROADMAP.md"
+
