@@ -1,3 +1,48 @@
+copilot/create-batch-deployment-script
+=======
+ copilot/add-license-and-documentation
+version: 1
+source: /home/runner/work/wisdom-scaffold/wisdom-scaffold/cathedral-status.sh
+deployment_rules:
+  - Review the target repository before adding files.
+  - Do not modify forks or archived repositories.
+  - Copy the exact AGPL-3.0 text from /home/runner/work/wisdom-scaffold/wisdom-scaffold/LICENSE.
+templates:
+  contributing: docs/cathedral-uplift/CONTRIBUTING.md
+  governance: docs/cathedral-uplift/GOVERNANCE.md
+  roadmap: docs/cathedral-uplift/ROADMAP.md
+  bug_report: docs/cathedral-uplift/bug_report.md
+  feature_request: docs/cathedral-uplift/feature_request.md
+targets:
+  aerocement: [GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  aerocement-calc: [GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  AeroCement_Ecosystem: [CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  agape-coordination: [CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  agape-crossover-key: [LICENSE, CONTRIBUTING.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  agape-ipfs: [GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  agape-primitives: [LICENSE, CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  agape-une: [CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  agapenet: [LICENSE, CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  agaperesonance: [LICENSE, CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  axiom-library: [LICENSE, README.md, CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  black-locust-rmh: [GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  canonical: [LICENSE, CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  etaledger: [LICENSE, CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  fractallattice: [LICENSE, CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  jesseray718: [CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  OpenCell-Thermal-System: [GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  openroot-canon: [CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  openroot-foundation: [CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  openroot-spoke-template: [GOVERNANCE.md, ROADMAP.md]
+  openroot-thesis: [CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  oscillation-mesh: [LICENSE, CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  renaissance-protocol: [GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  skills-introduction-to-github: [CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  und-protocol: [CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  une: [CONTRIBUTING.md, GOVERNANCE.md, ROADMAP.md, .github/ISSUE_TEMPLATE/bug_report.md, .github/ISSUE_TEMPLATE/feature_request.md]
+  wisdom-scaffold: [GOVERNANCE.md, ROADMAP.md]
+=======
+main
 ---
 # CATHEDRAL DOCUMENTATION DEPLOYMENT MANIFEST
 # Generated from cathedral-status.sh audit (REVIEW_RECOMMENDED classification)
@@ -394,3 +439,7 @@ repos:
       - template: "ROADMAP.md"
         target: "ROADMAP.md"
 
+copilot/create-batch-deployment-script
+
+ main
+main
