@@ -13,8 +13,8 @@ cursor = conn.cursor()
 cursor.execute("SELECT name, audit_notes, file_tree_json FROM github_repos;")
 repos_raw = cursor.fetchall()
 
-# 2. Fetch Files
-cursor.execute("SELECT repo_name, file_path FROM file_index;")
+# 2. Fetch Files (using 'repo' column name)
+cursor.execute("SELECT repo, file_path FROM file_index;")
 files_raw = cursor.fetchall()
 
 # 3. Fetch Embeddings
@@ -27,8 +27,8 @@ print(f" Loaded: {len(repos_raw)} Repositories | {len(files_raw)} Files | {len(e
 
 # Map files per repo
 files_by_repo = {}
-for repo_name, file_path in files_raw:
-    files_by_repo.setdefault(repo_name, []).append(file_path)
+for repo, file_path in files_raw:
+    files_by_repo.setdefault(repo, []).append(file_path)
 
 # Build Manifest
 manifest = {
