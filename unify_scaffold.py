@@ -9,12 +9,26 @@ print("--> Executing Grand Unification Synthesis directly from SQLite...")
 conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
 
+# Auto-detect column name for file_index
+cursor.execute("PRAGMA table_info(file_index);")
+file_index_cols = [col[1] for col in cursor.fetchall()]
+
+repo_col = "repo"
+if "repo_name" in file_index_cols:
+    repo_col = "repo_name"
+elif "repository" in file_index_cols:
+    repo_col = "repository"
+elif "repo" in file_index_cols:
+    repo_col = "repo"
+
+print(f" Detected file_index schema columns: {file_index_cols} (Using '{repo_col}')")
+
 # 1. Fetch Repos
 cursor.execute("SELECT name, audit_notes, file_tree_json FROM github_repos;")
 repos_raw = cursor.fetchall()
 
-# 2. Fetch Files (using 'repo' column name)
-cursor.execute("SELECT repo, file_path FROM file_index;")
+# 2. Fetch Files dynamically
+cursor.execute(f"SELECT {repo_col}, file_path FROM file_index;")
 files_raw = cursor.fetchall()
 
 # 3. Fetch Embeddings
@@ -27,8 +41,8 @@ print(f" Loaded: {len(repos_raw)} Repositories | {len(files_raw)} Files | {len(e
 
 # Map files per repo
 files_by_repo = {}
-for repo, file_path in files_raw:
-    files_by_repo.setdefault(repo, []).append(file_path)
+for repo_key, file_path in files_raw:
+    files_by_repo.setdefault(repo_key, []).append(file_path)
 
 # Build Manifest
 manifest = {
