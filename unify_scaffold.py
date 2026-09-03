@@ -9,26 +9,12 @@ print("--> Executing Grand Unification Synthesis directly from SQLite...")
 conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
 
-# Auto-detect column name for file_index
-cursor.execute("PRAGMA table_info(file_index);")
-file_index_cols = [col[1] for col in cursor.fetchall()]
-
-repo_col = "repo"
-if "repo_name" in file_index_cols:
-    repo_col = "repo_name"
-elif "repository" in file_index_cols:
-    repo_col = "repository"
-elif "repo" in file_index_cols:
-    repo_col = "repo"
-
-print(f" Detected file_index schema columns: {file_index_cols} (Using '{repo_col}')")
-
 # 1. Fetch Repos
 cursor.execute("SELECT name, audit_notes, file_tree_json FROM github_repos;")
 repos_raw = cursor.fetchall()
 
-# 2. Fetch Files dynamically
-cursor.execute(f"SELECT {repo_col}, file_path FROM file_index;")
+# 2. Fetch Files (using actual column 'path')
+cursor.execute("SELECT path FROM file_index;")
 files_raw = cursor.fetchall()
 
 # 3. Fetch Embeddings
@@ -37,23 +23,21 @@ embeddings_raw = cursor.fetchall()
 
 conn.close()
 
-print(f" Loaded: {len(repos_raw)} Repositories | {len(files_raw)} Files | {len(embeddings_raw)} Embeddings")
+print(f" Loaded: {len(repos_raw)} Repositories | {len(files_raw)} Total Files | {len(embeddings_raw)} Embeddings")
 
-# Map files per repo
-files_by_repo = {}
-for repo_key, file_path in files_raw:
-    files_by_repo.setdefault(repo_key, []).append(file_path)
+# Group files by matching repository name in file path
+all_file_paths = [f[0] for f in files_raw if f[0]]
 
-# Build Manifest
 manifest = {
     "total_repos": len(repos_raw),
-    "total_files": len(files_raw),
+    "total_files": len(all_file_paths),
     "total_vector_embeddings": len(embeddings_raw),
     "architecture_nodes": []
 }
 
 for name, notes, tree_json in repos_raw:
-    repo_files = files_by_repo.get(name, [])
+    # Match files belonging to this repository path
+    repo_files = [p for p in all_file_paths if f"/{name}/" in p or p.startswith(f"{name}/")]
     manifest["architecture_nodes"].append({
         "repo": name,
         "audit_notes": notes,

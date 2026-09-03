@@ -1,6 +1,270 @@
 {
-  "total_repos": 0,
-  "total_files": 0,
-  "total_vector_embeddings": 0,
-  "repositories": []
+  "total_repos": 42,
+  "total_files": 937,
+  "total_vector_embeddings": 42,
+  "architecture_nodes": [
+    {
+      "repo": "jesseray718-archive",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "kai9000",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "axiom-library",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "canonical",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "etaledger",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "skills-introduction-to-github",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "oscillation-mesh",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "openroot-foundation",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "openroot-canon",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "fractallattice",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "aerocement-calc",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "agape-une",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "kai-memory",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "agaperesonance",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "wisdom-scaffold",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "jesseray718",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "openroot",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "OpenCell-Thermal-System",
+      "audit_notes": "1_OPEN_PRS",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "agape-coordination",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "agape-crossover-key",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "agapenet",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "black-locust-rmh",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "openroot-thesis",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "markor",
+      "audit_notes": "CLEAN",
+      "file_count": 937,
+      "sample_files": [
+        "/home/jesse/markor/.atomignore",
+        "/home/jesse/markor/.git/COMMIT_EDITMSG",
+        "/home/jesse/markor/.git/FETCH_HEAD",
+        "/home/jesse/markor/.git/HEAD",
+        "/home/jesse/markor/.git/config",
+        "/home/jesse/markor/.git/description",
+        "/home/jesse/markor/.git/hooks/applypatch-msg.sample",
+        "/home/jesse/markor/.git/hooks/commit-msg.sample",
+        "/home/jesse/markor/.git/hooks/fsmonitor-watchman.sample",
+        "/home/jesse/markor/.git/hooks/post-update.sample"
+      ]
+    },
+    {
+      "repo": "AeroCement_Ecosystem",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "openroot-spoke-template",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "renaissance-protocol",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "aerocement",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "Reticulum",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "RNode_Firmware",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "LXMF",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "tinyGS",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "MeshCore",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "firmware",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "und-protocol",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "une",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "agape-primitives",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "agape-ipfs",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "civilization2.0",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "open-cell-thermal-loop",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "open-cell-thermal-open-cell-the",
+      "audit_notes": "CLEAN",
+      "file_count": 0,
+      "sample_files": []
+    },
+    {
+      "repo": "aerocement-",
+      "audit_notes": "MISSING_GITIGNORE, NO_CI_WORKFLOWS",
+      "file_count": 0,
+      "sample_files": []
+    }
+  ]
 }
