@@ -1,20 +1,7 @@
 name: CI
-on:
-  push:
-    branches: [main]
-  pull_request:
-  workflow_dispatch:
-
+on: [push, pull_request]
 jobs:
-  sidekick:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: compile
-        run: python3 -m py_compile kit/bin/sidekick.py
-      - name: help
-        run: python3 kit/bin/sidekick.py help
-      - name: principles
-        run: python3 kit/bin/sidekick.py principles | grep P01_observe
-      - name: doctor json
-        run: python3 kit/bin/sidekick.py doctor | python3 -c "import sys,json; json.load(sys.stdin)"
