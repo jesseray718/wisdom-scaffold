@@ -1,0 +1,28 @@
+{
+  "id": "context_bridge",
+  "token": "bridge",
+  "status": "living",
+  "generated_at": "2026-09-04T02:16:00-05:00",
+  "pane": "spoke",
+  "host": "optiplex3060",
+  "canon_eval_coord": {"N": 6, "T": 1, "R": 1, "C": 0.0},
+  "nomic": "http://127.0.0.1:11434/api/embeddings nomic-embed-text 768",
+  "coder": "http://127.0.0.1:8080 llama-server qwen2.5-coder-7b-instruct-q4_k_m.gguf ngl0",
+  "index": "/home/jesse/wisdom-scaffold/data/optiplex_index.db",
+  "warehouse": "/home/jesse/wisdom-scaffold/data/optiplex_public.db",
+  "nomic_embeddings": 42,
+  "file_chunk_embeddings": 12450,
+  "file_chunks": 53942,
+  "codebase_corpus": 2585375,
+  "decoy": "/home/jesse/optiplex_index.db",
+  "search": "python3 /home/jesse/wisdom-scaffold/scripts/rag/vector_search.py",
+  "canon_py": "/home/jesse/github-mirror/openroot-canon/src/canon.py",
+  "need_gate": "/home/jesse/github-mirror/openroot-canon/NEED.md",
+  "do_not": [
+    "ollama run qwen2.5-coder while :8080 is up",
+    "from nomic import embed",
+    "revive MiniLM repo_embeddings",
+    "write the 0-byte home decoy",
+    "mint a token with canon.py need"
+  ]
+}

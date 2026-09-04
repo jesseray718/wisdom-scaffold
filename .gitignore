@@ -45,3 +45,5 @@ session_seeds
 .syncthing.*.tmp
 vendor_archive/
 .venv/
+
+!context_bridge/context.json
