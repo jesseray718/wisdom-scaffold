@@ -1,46 +1,47 @@
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/main
-# Core Exclusions
-vendor_archive/
-quarantine/
-backups/
-logs/
-fair/*.jsonl
-*.log
+=======
+all_notes_repos.db
+# Audit Logs & Local Overrides
+audit_prompt.txt
 autonomous_daemon.log
+autonomous_ledger.jsonl
 autonomous_report.json
 autonomous_snapshot.json
-autonomous_ledger.jsonl
-<<<<<<< HEAD
-__pycache__/
-*.pyc
-*.pyo
-=======
-
-# Python Cache
-__pycache__/
-*.pyc
-
-# Large Binaries
->>>>>>> origin/main
-*.gguf
+backups/
 *.bin
-*.pth
-*.pt
-<<<<<<< HEAD
-=======
-
-# Submodules
->>>>>>> origin/main
-meta_hub/
-.ssh
-*.pem
-*.key
-__pycache__
-.syncthing.*.tmp
-ENDOFBRIDGE
-session_seeds
-ledger/live
 context_bridge/context.json
+# Core Exclusions
+data/
+*.db
+*.db-shm
+*.db-wal
+ENDOFBRIDGE
+fair/*.jsonl
+*.gguf
+<<<<<<< HEAD
+*.key
+# Large Binaries
+ledger/live
+# Local Databases & Secrets Vaults
+# Local Environment & Python Caches
+*.log
+logs/
+meta_hub/
+>>>>>>> origin/main
+*.pem
+*.pt
+*.pth
+*.pyc
+__pycache__
+__pycache__/
+*.pyo
+# Python Cache
+quarantine/
+secrets_vault.db
+session_seeds
+*.sqlite3
+.ssh
+# Submodules
+.syncthing.*.tmp
+vendor_archive/
+.venv/

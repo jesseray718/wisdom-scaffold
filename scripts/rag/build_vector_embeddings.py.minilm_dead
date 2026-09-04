@@ -1,0 +1,60 @@
+import json
+import os
+import sqlite3
+import numpy as np
+from sentence_transformers import SentenceTransformer
+
+DB_PATH = os.path.expanduser("~/optiplex_index.db")
+MODEL_NAME = "all-MiniLM-L6-v2" # Fast, 384-dim embeddings
+
+def init_embedding_table(conn):
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS repo_embeddings (
+            repo_name TEXT PRIMARY KEY,
+            embedding BLOB,
+            text_payload TEXT,
+            FOREIGN KEY(repo_name) REFERENCES github_repos(name)
+        );
+    """)
+    conn.commit()
+
+def generate_embeddings():
+    if not os.path.exists(DB_PATH):
+        print(f"[ERROR] Database not found at {DB_PATH}")
+        return
+
+    print(f"--> Loading transformer model '{MODEL_NAME}'...")
+    model = SentenceTransformer(MODEL_NAME)
+
+    conn = sqlite3.connect(DB_PATH)
+    init_embedding_table(conn)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT name, visibility, workflow_count, audit_notes, file_tree_json FROM github_repos;")
+    repos = cursor.fetchall()
+
+    print(f"--> Generating vector embeddings for {len(repos)} repositories...")
+
+    for name, vis, wf_count, notes, tree_json in repos:
+        files = json.loads(tree_json) if tree_json else []
+        top_files = " ".join(files[:25])
+        
+        # Build text representation for embedding vector
+        payload = f"Repo: {name} | Visibility: {vis} | Workflows: {wf_count} | Notes: {notes} | Key Files: {top_files}"
+
+        # Generate 384-dimensional vector array
+        vec = model.encode(payload).astype(np.float32)
+
+        cursor.execute("""
+            INSERT OR REPLACE INTO repo_embeddings (repo_name, embedding, text_payload)
+            VALUES (?, ?, ?)
+        """, (name, sqlite3.Binary(vec.tobytes()), payload))
+
+        print(f" [Vectorized] {name}")
+
+    conn.commit()
+    conn.close()
+    print("\n=== Vector Embedding Generation Complete! ===")
+
+if __name__ == "__main__":
+    generate_embeddings()
