@@ -127,18 +127,18 @@ def fts_search(query: str, limit: int = 20) -> list[dict]:
             query.replace('"', "").replace(".", "").replace(":", "").strip()
         )
 
-        # Query FTS5 table
+        # Query FTS5 table - use rowid and rank() function correctly
         cursor = conn.execute(
             """
             SELECT 
                 fc.id, 
                 fc.chunk_text, 
                 fc.file_path,
-                rank
+                chunks_fts.rank
             FROM chunks_fts
             JOIN file_chunks fc ON chunks_fts.rowid = fc.id
             WHERE chunks_fts MATCH ?
-            ORDER BY rank
+            ORDER BY chunks_fts.rank
             LIMIT ?
         """,
             (clean_query, limit),
@@ -186,6 +186,7 @@ def nomic_search(query: str, limit: int = 20) -> list[dict]:
         conn = sqlite3.connect(f"file:{RESEARCH_DB}?mode=ro", uri=True)
         conn.row_factory = sqlite3.Row
 
+        # Query all chunks with embeddings
         cursor = conn.execute(
             """
             SELECT fc.id, fc.chunk_text, fc.file_path, fce.embedding
@@ -257,7 +258,7 @@ def hybrid_search(query: str, fts_limit: int = 15, nomic_limit: int = 10) -> lis
                     )
                     results_by_id[cid]["source"] += "+FTS"
         except Exception as e:
-            print(f"[FTS TIMEOUT] {e}", file=sys.stderr)
+            print(f"[FTS TIMEOUT/ERROR] {e}", file=sys.stderr)
 
         # Collect NOMIC results (2-3s)
         try:
@@ -271,7 +272,7 @@ def hybrid_search(query: str, fts_limit: int = 15, nomic_limit: int = 10) -> lis
                     )
                     results_by_id[cid]["source"] += "+NOMIC"
         except Exception as e:
-            print(f"[NOMIC TIMEOUT] {e}", file=sys.stderr)
+            print(f"[NOMIC TIMEOUT/ERROR] {e}", file=sys.stderr)
 
     # Final sort
     merged = sorted(results_by_id.values(), key=lambda x: x["score"], reverse=True)
@@ -349,6 +350,7 @@ def log_to_events(query: str, answer: str, sources: list[str]) -> None:
             "SELECT name FROM sqlite_master WHERE type='table' AND name='events'"
         )
         if not cursor.fetchone():
+            conn.close()
             return  # Table doesn't exist, skip
         
         conn.execute(
