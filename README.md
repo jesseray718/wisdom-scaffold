@@ -1,3 +1,4 @@
+[![Sponsor](https://img.shields.io/badge/Sponsor-this_project-ff69b4?logo=github&style=for-the-badge)](https://github.com/sponsors/jesseray718)
 # OpenRoot Wisdom Scaffold
 
 > "Every contribution lifts the next climber. Hoarding breaks the scaffold."
@@ -397,3 +398,29 @@ AGPL-3.0. No paywalls. No extraction. Share alike.
 
 ## Knowledge Integration
 See `docs/knowledge/`.
+
+## 🚀 Start Here
+
+**New to this project?** Start with these resources:
+
+- 📖 **[Full Documentation](../../wiki)** - Complete guides and tutorials
+- 💬 **[Discussions](../../discussions)** - Ask questions, share builds
+- 🎥 **[Video Tutorials](https://youtube.com/@YourChannel)** - (Coming soon - subscribe for updates!)
+- 💰 **[Support This Work](https://github.com/sponsors/jesseray718)** - Become a sponsor
+
+---
+
+
+## 🔗 Related Projects
+
+This is part of the **OpenRoot Ecosystem**:
+
+| Project | Description |
+|---------|-------------|
+| [AeroCement](../aerocement) | Triple-utility solar-thermal concrete panels |
+| [OpenRoot](../openroot) | Ferrocement domes + thermal labyrinths |
+| [Wisdom Scaffold](../wisdom-scaffold) | Ancient wisdom + computation frameworks |
+| [Renaissance Protocol](../renaissance-protocol) | Proof-of-work for physical labor |
+
+---
+
