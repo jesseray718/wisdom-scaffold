@@ -399,6 +399,8 @@ AGPL-3.0. No paywalls. No extraction. Share alike.
 ## Knowledge Integration
 See `docs/knowledge/`.
 
+## 🌐 Main Site: https://jesseray718.github.io
+
 ## 🚀 Start Here
 
 **New to this project?** Start with these resources:
