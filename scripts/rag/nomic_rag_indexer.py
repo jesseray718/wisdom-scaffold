@@ -7,12 +7,12 @@ import numpy as np
 
 DB_PATH = "/home/jesse/wisdom-scaffold/data/optiplex_index.db"
 NOMIC_MODEL = "nomic-embed-text"
-OLLAMA_URL = "http://localhost:11434/api/embed"
+OLLAMA_URL = "http://127.0.0.1:11434/api/embeddings"
 
 
 def get_nomic_embedding(text):
     """Generates an 8192-token context vector via Ollama's REST API."""
-    payload = json.dumps({"model": NOMIC_MODEL, "input": text}).encode("utf-8")
+    payload = json.dumps({"model": NOMIC_MODEL, "prompt": text[:2000]}).encode("utf-8")
 
     req = urllib.request.Request(
         OLLAMA_URL, data=payload, headers={"Content-Type": "application/json"}
@@ -22,6 +22,8 @@ def get_nomic_embedding(text):
         with urllib.request.urlopen(req) as response:
             data = json.loads(response.read().decode("utf-8"))
             # API returns a list of embeddings under 'embeddings'
+            if "embedding" in data:
+                return np.array(data["embedding"], dtype=np.float32)
             if "embeddings" in data and len(data["embeddings"]) > 0:
                 return np.array(data["embeddings"][0], dtype=np.float32)
     except Exception as e:
