@@ -52,3 +52,4 @@ vendor_archive/
 *.bak
 __pycache__/
 *.db
+.aider*
