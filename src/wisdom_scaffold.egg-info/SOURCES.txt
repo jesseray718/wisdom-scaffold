@@ -1,9 +1,0 @@
-LICENSE
-README.md
-pyproject.toml
-src/wisdom_scaffold/__init__.py
-src/wisdom_scaffold/unify_scaffold.py
-src/wisdom_scaffold.egg-info/PKG-INFO
-src/wisdom_scaffold.egg-info/SOURCES.txt
-src/wisdom_scaffold.egg-info/dependency_links.txt
-src/wisdom_scaffold.egg-info/top_level.txt

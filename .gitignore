@@ -47,3 +47,8 @@ vendor_archive/
 .venv/
 
 !context_bridge/context.json
+# hygiene 2026-09-12
+*.egg-info/
+*.bak
+__pycache__/
+*.db
