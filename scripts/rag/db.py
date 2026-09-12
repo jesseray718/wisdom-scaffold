@@ -123,3 +123,8 @@ class DatabaseManager:
                 results.append({"id": int(row[0]), "title": row[1], "content": row[2], "rrf_score": score})
         conn.close()
         return results
+
+def init_db(path: str) -> sqlite3.Connection:
+    db_manager = DatabaseManager(db_path=path)
+    db_manager.setup_schema()
+    return db_manager.get_connection()
