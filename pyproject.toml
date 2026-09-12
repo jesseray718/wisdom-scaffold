@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wisdom-scaffold"
+version = "1.0.1"
+description = "Universal Wisdom Engine & Spatial Matrix Analyzer Scaffold"
+authors = [{ name = "Jesse", email = "jesse@example.com" }]
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,173 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+ROOT="$HOME/wisdom-scaffold"
+KNOWLEDGE_DB="$HOME/knowledge-node/knowledge.db"
+VECTOR_DB="$ROOT/data/optiplex_index.db"
+VECTOR_SCRIPT="$ROOT/scripts/rag/vector_search.py"
+STACK="$ROOT/context_bridge/stack.yaml"
+LOG_DIR="$ROOT/logs/rag"
+
+mkdir -p "$LOG_DIR"
+
+die() {
+  echo "ERROR: $*" >&2
+  exit 1
+}
+
+have() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+require_file() {
+  [ -f "$1" ] || die "Missing file: $1"
+}
+
+doctor() {
+  echo "=== WISDOM SCAFFOLD: DOCTOR ==="
+  echo "Time: $(date -Is)"
+  echo
+  echo "--- Files ---"
+  for f in "$KNOWLEDGE_DB" "$VECTOR_DB" "$VECTOR_SCRIPT" "$STACK"; do
+    if [ -f "$f" ]; then
+      echo "OK      $f"
+    else
+      echo "MISSING $f"
+    fi
+  done
+
+  echo
+  echo "--- Services ---"
+  if curl -fsS --max-time 3 http://127.0.0.1:11434/api/tags >/dev/null 2>&1; then
+    echo "OK      Ollama responds at http://127.0.0.1:11434"
+  else
+    echo "WARN    Ollama is not responding at port 11434"
+  fi
+
+  if curl -fsS --max-time 3 http://127.0.0.1:8080/health >/dev/null 2>&1; then
+    echo "OK      llama-server responds at http://127.0.0.1:8080"
+  else
+    echo "INFO    llama-server health endpoint did not respond"
+  fi
+
+  echo
+  echo "--- Processes ---"
+  pgrep -af 'llama-server|ollama serve|vector_search|hybrid_rag_router|nomic_rag_indexer' || true
+
+  echo
+  echo "--- Knowledge catalog ---"
+  if [ -f "$KNOWLEDGE_DB" ]; then
+    sqlite3 -header -column "$KNOWLEDGE_DB" \
+      "SELECT COUNT(*) AS files_total FROM files;" || true
+    sqlite3 -header -column "$KNOWLEDGE_DB" \
+      "SELECT COUNT(*) AS fts_rows FROM file_text;" || true
+    sqlite3 "$KNOWLEDGE_DB" "PRAGMA integrity_check;" || true
+  fi
+
+  echo
+  echo "--- Vector repository index ---"
+  if [ -f "$VECTOR_DB" ]; then
+    sqlite3 -header -column "$VECTOR_DB" \
+      "SELECT COUNT(*) AS embeddings,
+              COUNT(DISTINCT repo_name) AS repositories,
+              MIN(length(embedding)) AS min_vector_bytes,
+              MAX(length(embedding)) AS max_vector_bytes
+       FROM nomic_embeddings;" || true
+  fi
+
+  echo
+  echo "--- API variables, values hidden ---"
+  for key in OPENROUTER_API_KEY GEMINI_API_KEY GROK_API_KEY XAI_API_KEY GOOGLE_API_KEY; do
+    if [ -n "${!key:-}" ]; then
+      echo "$key: set"
+    else
+      echo "$key: missing"
+    fi
+  done
+}
+
+vector() {
+  [ "$#" -gt 0 ] || die "Usage: wisdom vector \"your question\""
+  require_file "$VECTOR_SCRIPT"
+  require_file "$VECTOR_DB"
+  python3 "$VECTOR_SCRIPT" "$*"
+}
+
+fts() {
+  [ "$#" -gt 0 ] || die "Usage: wisdom fts \"words to search\""
+  require_file "$KNOWLEDGE_DB"
+  sqlite3 -header -column "$KNOWLEDGE_DB" \
+    "SELECT path, title,
+            snippet(file_text, 2, '[', ']', '...', 18) AS match
+     FROM file_text
+     WHERE file_text MATCH '$(printf "%s" "$*" | sed "s/'/''/g")'
+     LIMIT 10;"
+}
+
+status() {
+  cd "$ROOT"
+  echo "=== Git status ==="
+  git status --short
+  echo
+  echo "=== Recent commits ==="
+  git --no-pager log --oneline -10
+  echo
+  echo "=== Context bridge ==="
+  [ -f "$ROOT/context_bridge/seed.json" ] && echo "seed.json: present" || echo "seed.json: missing"
+  [ -f "$STACK" ] && echo "stack.yaml: present" || echo "stack.yaml: missing"
+}
+
+snapshot() {
+  local stamp dest
+  stamp="$(date +%Y%m%d-%H%M%S)"
+  dest="$HOME/wisdom-recovery/$stamp"
+  mkdir -p "$dest"
+  require_file "$KNOWLEDGE_DB"
+  require_file "$VECTOR_DB"
+
+  sqlite3 "$KNOWLEDGE_DB" ".backup '$dest/knowledge.db'"
+  sqlite3 "$VECTOR_DB" ".backup '$dest/optiplex_index.db'"
+  cp -a "$ROOT/context_bridge" "$dest/context_bridge"
+  cp -a "$VECTOR_SCRIPT" "$dest/vector_search.py"
+
+  printf 'Recovery snapshot created: %s\n' "$dest"
+}
+
+help_text() {
+  cat <<'HELP'
+Wisdom Scaffold control command
+
+  wisdom doctor
+      Read-only health report for databases, services, processes, and keys.
+
+  wisdom vector "your natural language query"
+      Search the working 42-repository local Nomic vector index.
+
+  wisdom fts "literal words"
+      Search SQLite FTS5 text when the file_text table has been populated.
+
+  wisdom status
+      Show Git state and Context Bridge file presence.
+
+  wisdom snapshot
+      Create SQLite-safe backups plus Context Bridge/script copies.
+
+  wisdom help
+      Show this help.
+
+Safety:
+  - doctor, vector, fts, and status do not write to your databases.
+  - snapshot creates backups only.
+  - This command never deletes files, cleans Git, rescans files, or rebuilds vectors.
+HELP
+}
+
+case "${1:-help}" in
+  doctor) shift; doctor "$@" ;;
+  vector) shift; vector "$@" ;;
+  fts) shift; fts "$@" ;;
+  status) shift; status "$@" ;;
+  snapshot) shift; snapshot "$@" ;;
+  help|-h|--help) help_text ;;
+  *) die "Unknown command: ${1}. Run: wisdom help" ;;
+esac

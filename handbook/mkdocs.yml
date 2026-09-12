@@ -1,0 +1,24 @@
+site_name: Wisdom Scaffold Dynamic Handbook
+site_description: Permaculture-aligned algorithmic handbook and documentation engine.
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: teal
+    accent: lime
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true

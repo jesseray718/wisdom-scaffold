@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+OUT="$HOME/wisdom-scaffold/logs/daily/daily-$(date +%Y%m%d-%H%M%S).txt"
+
+{
+  echo "DAILY WISDOM CHECK"
+  echo "Generated: $(date -Is)"
+  echo
+  optiplex-health
+  echo
+  echo "=== OPERATOR MEMORY ==="
+  operator-memory status 2>&1 || true
+  echo
+  echo "=== LIVE GIT SUMMARY ==="
+  for repo in "$HOME/wisdom-scaffold" "$HOME/openroot" "$HOME/une"; do
+    [ -d "$repo/.git" ] || continue
+    echo
+    echo "REPO: $repo"
+    git -C "$repo" status --short --branch --untracked-files=normal
+  done
+} | tee "$OUT"
+
+echo
+echo "Saved: $OUT"

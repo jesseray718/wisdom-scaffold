@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+STAMP="$(date +%Y%m%d-%H%M%S)"
+DEST="$HOME/wisdom-recovery/$STAMP-core-databases"
+mkdir -p "$DEST"
+
+DBS=(
+  "$HOME/knowledge-node/knowledge.db"
+  "$HOME/wisdom-scaffold/data/optiplex_index.db"
+  "$HOME/wisdom-scaffold/data/operator_memory.db"
+)
+
+for db in "${DBS[@]}"; do
+  [ -f "$db" ] || { echo "MISSING: $db" >&2; continue; }
+  name="$(basename "$db")"
+  sqlite3 "$db" ".backup '$DEST/$name'"
+  sqlite3 "$DEST/$name" "PRAGMA integrity_check;" > "$DEST/$name.integrity.txt"
+  sha256sum "$DEST/$name" > "$DEST/$name.sha256"
+  echo "BACKED UP: $name"
+done
+
+echo
+echo "=== Integrity ==="
+cat "$DEST"/*.integrity.txt 2>/dev/null || true
+echo
+echo "=== Hash verification ==="
+sha256sum -c "$DEST"/*.sha256 2>/dev/null || true
+echo
+echo "Recovery directory: $DEST"

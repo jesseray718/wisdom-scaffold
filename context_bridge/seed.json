@@ -1,0 +1,67 @@
+{
+  "token": "seed",
+  "query": "openroot canon coordination eta resonance hang",
+  "eval": {
+    "coord_R1": 0.0,
+    "coord_R0": 0.0066,
+    "synergy_N6_R1": 1.5,
+    "eta_1_1": 1.0
+  },
+  "stack": {
+    "nomic": "127.0.0.1:11434 nomic-embed-text 768",
+    "coder": "127.0.0.1:8080 qwen2.5-coder-7b q4 ngl0",
+    "index": "/home/jesse/wisdom-scaffold/data/optiplex_index.db"
+  },
+  "repos": [
+    {
+      "score": 0.641,
+      "name": "openroot-canon",
+      "tree": "Repository: openroot-canon\nNotes: CLEAN\nStructure:\nNEED.md\n.openrabbit.yml\nSECURITY.md\nREADME.md\nOPTIPLEX_AUDIT_REPORT.md\nLICENSE\nsrc/canon.py\ndocs/knowledge/CLAIMS_REGISTRY.csv\ndocs/knowledge/UNIFIED_WISDOM_MANIFEST.md\ndocs/knowledge/INTEGRATION_NOTES.md\ndocs/knowledge/INTEGRATION_CHECKLIST.md\ncanon/ALGORITHMS.json\ncanon/CANDIDATES.json\ncanon/CANON.json\ncanon/NOMENCLATURE.json"
+    },
+    {
+      "score": 0.6071,
+      "name": "openroot-foundation",
+      "tree": "Repository: openroot-foundation\nNotes: CLEAN\nStructure:\n.gitignore\nPIN.md\n.openrabbit.yml\nSECURITY.md\nREADME.md\n.openrabbit.json\nLIBRARY.json\nAGENTS.md\npyproject.toml\nOPTIPLEX_AUDIT_REPORT.md\nLICENSE\nscripts/snapshot.py\nscripts/align.py\nscripts/harvest.py\nsrc/openroot_canon/__init__.py\nsrc/openroot_canon/laws.py\nsrc/openroot_canon/newton.py\nsrc/openroot_canon/__main__.py\ndocs/knowledge/CLAIMS_REGI"
+    },
+    {
+      "score": 0.6025,
+      "name": "openroot",
+      "tree": "Repository: openroot\nNotes: CLEAN\nStructure:\n.gitignore\nUNITY.md\nCONTEXT_BRIDGE.md\nworldline_tracker.py\ntest_thermo.cpp\nCONTRIBUTING.md\nREADME.md\naxiom_mesh_sync_optiplex.py\nunified_energy_package.sh\nsynergic_calculus.py\ntest_thermo.py\nPROFILE_README.md\nsystem_health_check.py\n.session_state.json\nMANIFESTO_ADDENDUM.md\nOPTIPLEX_AUDIT_REPORT.md\nchain_verify.py\nFINAL_PACKAGE.sh\n.coder_node.json\npytest"
+    },
+    {
+      "score": 0.5667,
+      "name": "openroot-spoke-template",
+      "tree": "Repository: openroot-spoke-template\nNotes: CLEAN\nStructure:\n.gitignore\nAGAPE_OFFLINE_CORE.json\nLICENSE-docs.md\nCONTRIBUTING.md\nCITATION.cff\nREADME.md\nLATTICE.md\n.coderabbit.yaml\nOPTIPLEX_AUDIT_REPORT.md\n.gitignore.bak\nMERGE_PROPOSAL_AGAPE.md\nPATH_INVENTORY.yaml\nLICENSE\n.agape-links.json\nbom/.gitkeep\ncad/.gitkeep\nsrc/.gitkeep\nledger/wealth_pathways.json\nledger/transmutation_ledger.jsonl\ndocs/.gitke"
+    },
+    {
+      "score": 0.5602,
+      "name": "oscillation-mesh",
+      "tree": "Repository: oscillation-mesh\nNotes: CLEAN\nStructure:\n.gitignore\n.openrabbit.yml\nSECURITY.md\nREADME.md\n.openrabbit.json\nOPTIPLEX_AUDIT_REPORT.md\nmvn/HIERARCHY.md\ncredits/CREDITS.md\nlanguage/seven.py\nlanguage/README.md\nlanguage/SEVEN.md\ndocs/knowledge/CLAIMS_REGISTRY.csv\ndocs/knowledge/UNIFIED_WISDOM_MANIFEST.md\ndocs/knowledge/INTEGRATION_NOTES.md\ndocs/knowledge/INTEGRATION_CHECKLIST.md\nfield-guides"
+    },
+    {
+      "score": 0.5418,
+      "name": "agape-coordination",
+      "tree": "Repository: agape-coordination\nNotes: CLEAN\nStructure:\n.gitignore\nAGAPE_OFFLINE_CORE.json\ncosmic_query_engine.py\nagape_engine.py\nswarm_core_v3.py\n.openrabbit.yml\nSECURITY.md\nREADME.md\nLATTICE.md\n.coderabbit.yaml\nagape_context_bridge.json\nOPTIPLEX_AUDIT_REPORT.md\n.gitignore.bak\nMERGE_PROPOSAL_AGAPE.md\nAGAPE_THESIS.md\nPATH_INVENTORY.yaml\nagape_stress_test.py\nLICENSE\n.agape-links.json\nthermal_cascade"
+    },
+    {
+      "score": 0.5277,
+      "name": "agaperesonance",
+      "tree": "Repository: agaperesonance\nNotes: CLEAN\nStructure:\n.gitignore\nsetup.py\n.openrabbit.yml\nSECURITY.md\nREADME.md\nLATTICE.md\nOPTIPLEX_AUDIT_REPORT.md\nagaperesonance.egg-info/SOURCES.txt\nagaperesonance.egg-info/PKG-INFO\nagaperesonance.egg-info/dependency_links.txt\nagaperesonance.egg-info/top_level.txt\nagaperesonance/__init__.py\nagaperesonance/core.py\nagaperesonance/__pycache__/__init__.cpython-314.pyc\na"
+    },
+    {
+      "score": 0.5262,
+      "name": "openroot-thesis",
+      "tree": "Repository: openroot-thesis\nNotes: CLEAN\nStructure:\nTHESIS.md\nREADME.md\nOPTIPLEX_AUDIT_REPORT.md\nQUICKSTART.md\nLICENSE\ndocs/03_LIFE/03_AQUAPONICS.md\ndocs/03_LIFE/02_QUAIL_TOWERS.md\ndocs/03_LIFE/README.md\ndocs/03_LIFE/01_BLACK_LOCUST_KEYSTONE.md\ndocs/03_LIFE/04_SEED_BANKING.md\ndocs/01_ENERGY/README.md\ndocs/01_ENERGY/03_STIRLING_ENGINE.md\ndocs/01_ENERGY/01_SOLAR_THERMAL_LOOP.md\ndocs/01_ENERGY/02_THE"
+    }
+  ],
+  "bodies": {
+    "NEED": "# Need-gate\n\nA name is a tool. Tools that exist without a job become weeds.\n\nAllow a new token only when all of these are true:\n\n1. You cannot cite an existing id without lying.\n2. You have used the idea in a real act (a pour, a hang, a weigh, a mesh fix), not only in a sentence.\n3. You can write one lock sentence that includes an anti-definition (what it is not).\n4. `src/canon.py need` has seen the token 3 times.\n5. You are willing to hang the edited NOMENCLATURE.json.\n\nRefuse a new token when:\n\n- it is a synonym of \u03b7, \u0393, C, R, hang, chain, PoPW, seed\n- it exists to sound larger (protocol, standard, meta-framework, omni)\n- it requires a public chain to \u201cbe real\u201d\n- it restates N00\u2013N15 in warmer words\n\nCanon shrinks by default. Growth is an exception you pay for in attention.\n",
+    "NOMENCLATURE_rule": "{\n  \"id\": \"openroot-nomenclature\",\n  \"version\": \"1.0.0\",\n  \"status\": \"locked\",\n  \"rule\": \"One token. One meaning. Speak the token. Do not invent a poetic synonym in a new README.\",\n  \"tokens\": {\n    \"A1\": \"the only operator: DERIVATION toward higher \u03b7 at R closer to 1.0\",\n    \"Agape\": \"unconditional ordered love that wills the good of the other; the kernel; not branding\",\n    \"eta\": \"\u03b7 = useful_joules / human_joules for one act\",\n    \"gamma\": \"\u0393 contribution density of a stream; not money\",\n    \"C\": \"coordination cost from N03\",\n    \"R\": \"resonance in [0,1]\",\n    \"S\": \"synergy multiplier from N05\",\n    \"L\": \"least-first fraction\",\n    \"Y\": \"useful yield in future human-hours or avoided purchases\",\n    \"P\": \"persistence in years\",\n    \"F\": \"forkability, count of nodes that can reproduce from open notes\",\n    \"Jh\": \"human joules to do the act\",\n    \"Je\": \"extra embodied joules you would not otherwise spend\",\n    \"CAS\": \"content-addressed store: cas/<sha256> is the only copy of those bytes\",\n    \"hang\": \"append a thermo block that points at CAS blobs\",\n    \"block\": \"one line of chain.jsonl\",\n    \"chain\": \"append-only hashed diary. local. yours.\",\n    \"tip\": \"the last block_hash\",\n    "
+  },
+  "do_not": [
+    "invent nomic.db or :9090",
+    "ask for \\~/.ssh or secrets_vault.db",
+    "replace local Nomic with MiniLM",
+    "mint a token"
+  ]
+}

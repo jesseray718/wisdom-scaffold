@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+LABEL="${1:-optiplex}"
+OUT_DIR="$HOME/wisdom-scaffold/logs/git-fleet"
+STAMP="$(date +%Y%m%d-%H%M%S)"
+REPORT="$OUT_DIR/git-fleet-${LABEL}-${STAMP}.txt"
+ROOTS=(
+  "$HOME"
+)
+
+mkdir -p "$OUT_DIR"
+
+{
+  echo "GIT FLEET AUDIT"
+  echo "Machine: $LABEL"
+  echo "Generated: $(date -Is)"
+  echo "User: ${USER:-unknown}"
+  echo
+
+  declare -A seen=()
+
+  while IFS= read -r -d '' dotgit; do
+    repo="${dotgit%/.git}"
+
+    if [ -n "${seen[$repo]:-}" ]; then
+      continue
+    fi
+    seen["$repo"]=1
+
+    echo "================================================================"
+    echo "REPOSITORY: $repo"
+    echo "----------------------------------------------------------------"
+
+    git -C "$repo" rev-parse --is-inside-work-tree >/dev/null 2>&1 || continue
+
+    echo "Branch:"
+    git -C "$repo" branch --show-current 2>/dev/null || true
+
+    echo
+    echo "HEAD:"
+    git -C "$repo" log -1 --format='%h %ad %s' --date=iso 2>/dev/null || true
+
+    echo
+    echo "Remotes:"
+    git -C "$repo" remote -v 2>/dev/null || true
+
+    echo
+    echo "Status:"
+    git -C "$repo" status --short --branch --untracked-files=all 2>/dev/null || true
+
+    echo
+    echo "Staged files for next commit:"
+    git -C "$repo" diff --cached --name-status 2>/dev/null || true
+
+    echo
+    echo "Unstaged tracked-file changes:"
+    git -C "$repo" diff --name-status 2>/dev/null || true
+
+    echo
+    echo "Untracked files:"
+    git -C "$repo" ls-files --others --exclude-standard 2>/dev/null || true
+
+    echo
+    echo "Staged diff summary:"
+    git -C "$repo" diff --cached --stat 2>/dev/null || true
+
+    echo
+    echo "Working diff summary:"
+    git -C "$repo" diff --stat 2>/dev/null || true
+    echo
+  done < <(
+    find "${ROOTS[@]}" \
+      -path "$HOME/.cache" -prune -o \
+      -path "$HOME/.local/share/Trash" -prune -o \
+      -path "$HOME/.npm" -prune -o \
+      -path "$HOME/.ollama" -prune -o \
+      -path "$HOME/.venv" -prune -o \
+      -type d -name .git -print0 2>/dev/null
+  )
+
+  echo "================================================================"
+  echo "END OF REPORT"
+} | tee "$REPORT"
+
+printf '\nSaved report: %s\n' "$REPORT"

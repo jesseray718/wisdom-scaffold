@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+OUT="$HOME/wisdom-scaffold/logs/git-fleet/live-workspace-$(date +%Y%m%d-%H%M%S).txt"
+ROOTS=(
+  "$HOME/wisdom-scaffold"
+  "$HOME/openroot"
+  "$HOME/une"
+)
+
+{
+  echo "LIVE WORKSPACE REPORT"
+  echo "Generated: $(date -Is)"
+  echo
+
+  for repo in "${ROOTS[@]}"; do
+    [ -d "$repo/.git" ] || { echo "MISSING GIT REPO: $repo"; continue; }
+
+    echo "================================================================"
+    echo "REPOSITORY: $repo"
+    echo "BRANCH: $(git -C "$repo" branch --show-current 2>/dev/null || echo detached)"
+    echo
+    echo "--- STAGED: exact next commit ---"
+    git -C "$repo" diff --cached --name-status
+    echo
+    echo "--- UNSTAGED: tracked edits/deletions ---"
+    git -C "$repo" diff --name-status
+    echo
+    echo "--- UNTRACKED: new files ---"
+    git -C "$repo" ls-files --others --exclude-standard
+    echo
+  done
+} | tee "$OUT"
+
+echo
+echo "Saved: $OUT"

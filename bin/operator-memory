@@ -1,0 +1,431 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import datetime as dt
+import hashlib
+import json
+import math
+import os
+from pathlib import Path
+import re
+import sqlite3
+import struct
+import sys
+import urllib.error
+import urllib.request
+
+ROOT = Path.home() / "wisdom-scaffold"
+DB = ROOT / "data" / "operator_memory.db"
+LOG_DIR = ROOT / "logs" / "operator-memory"
+OLLAMA_EMBED = "http://127.0.0.1:11434/api/embeddings"
+EMBED_MODEL = "nomic-embed-text"
+LLAMA_CHAT = "http://127.0.0.1:8080/v1/chat/completions"
+LLAMA_MODEL = "qwen2.5-coder-7b"
+
+REDACTIONS = [
+    (re.compile(r'(?i)\b(OPENROUTER_API_KEY|GEMINI_API_KEY|GOOGLE_API_KEY|GROK_API_KEY|XAI_API_KEY)\s*=\s*[^\s\'"]+'), r'\1=[REDACTED]'),
+    (re.compile(r'(?i)(authorization\s*:\s*bearer\s+)[^\s\'"]+'), r'\1[REDACTED]'),
+    (re.compile(r'\bsk-[A-Za-z0-9_-]{12,}\b'), '[REDACTED_OPENAI_STYLE_KEY]'),
+    (re.compile(r'\bAIza[A-Za-z0-9_-]{20,}\b'), '[REDACTED_GOOGLE_KEY]'),
+]
+
+def now() -> str:
+    return dt.datetime.now().astimezone().isoformat(timespec="seconds")
+
+def redact(text: str) -> str:
+    for pattern, replacement in REDACTIONS:
+        text = pattern.sub(replacement, text)
+    return text
+
+def connect() -> sqlite3.Connection:
+    DB.parent.mkdir(parents=True, exist_ok=True)
+    con = sqlite3.connect(DB)
+    con.row_factory = sqlite3.Row
+    con.execute("PRAGMA journal_mode=WAL")
+    con.execute("PRAGMA foreign_keys=ON")
+    return con
+
+def init_db() -> None:
+    with connect() as con:
+        con.executescript("""
+        CREATE TABLE IF NOT EXISTS sources (
+          id INTEGER PRIMARY KEY,
+          path TEXT NOT NULL UNIQUE,
+          label TEXT NOT NULL,
+          sha256 TEXT NOT NULL,
+          imported_at TEXT NOT NULL,
+          bytes INTEGER NOT NULL,
+          lines INTEGER NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS events (
+          id INTEGER PRIMARY KEY,
+          source_id INTEGER NOT NULL REFERENCES sources(id) ON DELETE CASCADE,
+          line_start INTEGER NOT NULL,
+          line_end INTEGER NOT NULL,
+          kind TEXT NOT NULL,
+          text TEXT NOT NULL,
+          text_sha256 TEXT NOT NULL UNIQUE,
+          created_at TEXT NOT NULL
+        );
+
+        CREATE VIRTUAL TABLE IF NOT EXISTS event_text USING fts5(
+          text,
+          content='events',
+          content_rowid='id',
+          tokenize='unicode61'
+        );
+
+        CREATE TABLE IF NOT EXISTS embeddings (
+          event_id INTEGER PRIMARY KEY REFERENCES events(id) ON DELETE CASCADE,
+          model TEXT NOT NULL,
+          dimensions INTEGER NOT NULL,
+          vector BLOB NOT NULL,
+          created_at TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS analyses (
+          id INTEGER PRIMARY KEY,
+          question TEXT NOT NULL,
+          evidence_json TEXT NOT NULL,
+          response TEXT NOT NULL,
+          model TEXT NOT NULL,
+          created_at TEXT NOT NULL
+        );
+        """)
+        con.executescript("""
+        CREATE TRIGGER IF NOT EXISTS events_ai AFTER INSERT ON events BEGIN
+          INSERT INTO event_text(rowid, text) VALUES (new.id, new.text);
+        END;
+        CREATE TRIGGER IF NOT EXISTS events_ad AFTER DELETE ON events BEGIN
+          INSERT INTO event_text(event_text, rowid, text) VALUES ('delete', old.id, old.text);
+        END;
+        CREATE TRIGGER IF NOT EXISTS events_au AFTER UPDATE ON events BEGIN
+          INSERT INTO event_text(event_text, rowid, text) VALUES ('delete', old.id, old.text);
+          INSERT INTO event_text(rowid, text) VALUES (new.id, new.text);
+        END;
+        """)
+
+def classify(block: str) -> str:
+    lower = block.lower()
+    if "command not found" in lower or "syntax error" in lower or "traceback" in lower or "error:" in lower:
+        return "error"
+    if "$ " in block or "jesse@optiplex" in lower or "~ $" in block:
+        return "terminal"
+    if "git status" in lower or "repository:" in lower or "branch:" in lower:
+        return "git"
+    return "note"
+
+def blocks_from_text(text: str, max_lines: int = 28, max_chars: int = 5000):
+    lines = text.splitlines()
+    for start in range(0, len(lines), max_lines):
+        section = "\n".join(lines[start:start + max_lines]).strip()
+        if not section:
+            continue
+        yield start + 1, min(start + max_lines, len(lines)), section[:max_chars]
+
+def import_file(path: Path, label: str) -> None:
+    if not path.is_file():
+        raise SystemExit(f"Not a readable file: {path}")
+    raw = path.read_text(encoding="utf-8", errors="replace")
+    safe = redact(raw)
+    digest = hashlib.sha256(safe.encode()).hexdigest()
+    line_count = len(safe.splitlines())
+
+    with connect() as con:
+        old = con.execute("SELECT sha256 FROM sources WHERE path=?", (str(path),)).fetchone()
+        if old and old["sha256"] == digest:
+            print(f"Unchanged, skipped: {path}")
+            return
+
+        if old:
+            source_id = con.execute("SELECT id FROM sources WHERE path=?", (str(path),)).fetchone()["id"]
+            con.execute("DELETE FROM events WHERE source_id=?", (source_id,))
+            con.execute(
+                "UPDATE sources SET label=?, sha256=?, imported_at=?, bytes=?, lines=? WHERE id=?",
+                (label, digest, now(), len(safe.encode()), line_count, source_id),
+            )
+        else:
+            cur = con.execute(
+                "INSERT INTO sources(path,label,sha256,imported_at,bytes,lines) VALUES(?,?,?,?,?,?)",
+                (str(path), label, digest, now(), len(safe.encode()), line_count),
+            )
+            source_id = cur.lastrowid
+
+        count = 0
+        for line_start, line_end, section in blocks_from_text(safe):
+            event_digest = hashlib.sha256(
+                f"{source_id}:{line_start}:{line_end}:{section}".encode()
+            ).hexdigest()
+            con.execute(
+                """INSERT OR IGNORE INTO events
+                   (source_id,line_start,line_end,kind,text,text_sha256,created_at)
+                   VALUES(?,?,?,?,?,?,?)""",
+                (source_id, line_start, line_end, classify(section), section, event_digest, now()),
+            )
+            count += 1
+    print(f"Imported {count} blocks: {path}")
+
+def ollama_embed(text: str, task: str) -> list[float]:
+    body = json.dumps({
+        "model": EMBED_MODEL,
+        "prompt": f"{task}: {text}",
+    }).encode()
+    req = urllib.request.Request(
+        OLLAMA_EMBED,
+        data=body,
+        headers={"Content-Type": "application/json"},
+    )
+    with urllib.request.urlopen(req, timeout=60) as response:
+        payload = json.loads(response.read())
+    return payload["embedding"]
+
+def pack_vector(vector: list[float]) -> bytes:
+    return struct.pack(f"<{len(vector)}f", *vector)
+
+def unpack_vector(blob: bytes, dimensions: int) -> list[float]:
+    return list(struct.unpack(f"<{dimensions}f", blob))
+
+def cosine(a: list[float], b: list[float]) -> float:
+    dot = aa = bb = 0.0
+    for x, y in zip(a, b):
+        dot += x * y
+        aa += x * x
+        bb += y * y
+    return dot / math.sqrt(aa * bb) if aa and bb else -1.0
+
+def embed_pending(limit: int) -> None:
+    with connect() as con:
+        rows = con.execute(
+            """SELECT e.id, e.text
+               FROM events e
+               LEFT JOIN embeddings v ON v.event_id=e.id
+               WHERE v.event_id IS NULL
+               ORDER BY e.id
+               LIMIT ?""",
+            (limit,),
+        ).fetchall()
+
+    if not rows:
+        print("No unembedded events.")
+        return
+
+    completed = 0
+    for row in rows:
+        vector = ollama_embed(row["text"], "search_document")
+        with connect() as con:
+            con.execute(
+                "INSERT OR REPLACE INTO embeddings(event_id,model,dimensions,vector,created_at) VALUES(?,?,?,?,?)",
+                (row["id"], EMBED_MODEL, len(vector), pack_vector(vector), now()),
+            )
+        completed += 1
+        print(f"Embedded {completed}/{len(rows)} event {row['id']}")
+    print(f"Embedding pass complete: {completed} events.")
+
+def fts_search(query: str, limit: int) -> list[sqlite3.Row]:
+    with connect() as con:
+        return con.execute(
+            """SELECT e.id, s.label, s.path, e.line_start, e.line_end, e.kind,
+                      snippet(event_text, 0, '[', ']', '...', 24) AS excerpt
+               FROM event_text
+               JOIN events e ON e.id=event_text.rowid
+               JOIN sources s ON s.id=e.source_id
+               WHERE event_text MATCH ?
+               ORDER BY bm25(event_text)
+               LIMIT ?""",
+            (query, limit),
+        ).fetchall()
+
+def vector_search(query: str, limit: int) -> list[sqlite3.Row]:
+    q = ollama_embed(query, "search_query")
+    with connect() as con:
+        rows = con.execute(
+            """SELECT e.id, s.label, s.path, e.line_start, e.line_end, e.kind,
+                      e.text, v.dimensions, v.vector
+               FROM embeddings v
+               JOIN events e ON e.id=v.event_id
+               JOIN sources s ON s.id=e.source_id
+               WHERE v.model=?""",
+            (EMBED_MODEL,),
+        ).fetchall()
+
+    scored = []
+    for row in rows:
+        score = cosine(q, unpack_vector(row["vector"], row["dimensions"]))
+        scored.append((score, row))
+    scored.sort(key=lambda pair: pair[0], reverse=True)
+    return [(score, row) for score, row in scored[:limit]]
+
+def show_search(query: str, limit: int) -> None:
+    print("\n=== FTS RESULTS ===")
+    try:
+        hits = fts_search(query, limit)
+    except sqlite3.OperationalError as exc:
+        print(f"FTS query unavailable: {exc}")
+        hits = []
+
+    if not hits:
+        print("(none)")
+    for row in hits:
+        print(f"\n[{row['kind']}] {row['path']}:{row['line_start']}-{row['line_end']}")
+        print(row["excerpt"])
+
+    print("\n=== VECTOR RESULTS ===")
+    vector_hits = vector_search(query, limit)
+    if not vector_hits:
+        print("(none; run: operator-memory embed)")
+    for score, row in vector_hits:
+        excerpt = row["text"].replace("\n", " ")[:450]
+        print(f"\n[{score:.4f}] [{row['kind']}] {row['path']}:{row['line_start']}-{row['line_end']}")
+        print(excerpt)
+
+def build_evidence(question: str, limit: int) -> list[dict]:
+    evidence = []
+    seen = set()
+
+    try:
+        for row in fts_search(question, limit):
+            if row["id"] in seen:
+                continue
+            seen.add(row["id"])
+            with connect() as con:
+                full = con.execute("SELECT text FROM events WHERE id=?", (row["id"],)).fetchone()["text"]
+            evidence.append({
+                "event_id": row["id"],
+                "source": row["path"],
+                "lines": f"{row['line_start']}-{row['line_end']}",
+                "kind": row["kind"],
+                "text": full[:900],
+            })
+    except sqlite3.OperationalError:
+        pass
+
+    for score, row in vector_search(question, limit):
+        if row["id"] in seen:
+            continue
+        seen.add(row["id"])
+        evidence.append({
+            "event_id": row["id"],
+            "source": row["path"],
+            "lines": f"{row['line_start']}-{row['line_end']}",
+            "kind": row["kind"],
+            "score": round(score, 4),
+            "text": row["text"][:900],
+        })
+    return evidence[:limit]
+
+def ask_local(question: str, limit: int) -> None:
+    evidence = build_evidence(question, limit)
+    if not evidence:
+        raise SystemExit("No evidence available. Import reports, then run: operator-memory embed")
+
+    packet = json.dumps(evidence, indent=2)
+    system = (
+        "You are a local engineering workflow reviewer. Analyze only the supplied "
+        "redacted evidence. Do not invent facts, do not execute commands, and do not "
+        "request or reveal secrets. Identify recurring operator friction, likely causes, "
+        "safe recommendations, candidate scripts/aliases/hotkeys, and a small next-action "
+        "plan. Clearly mark assumptions. Recommendations must be reversible and require "
+        "human approval before modifying files, Git, services, or databases."
+    )
+    user = (
+        f"Question: {question}\n\n"
+        f"Evidence packet follows. Cite event IDs and source line ranges in your answer.\n{packet}"
+    )
+    request = json.dumps({
+        "model": LLAMA_MODEL,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ],
+        "temperature": 0.2,
+        "max_tokens": 500,
+        "stream": False,
+    }).encode()
+    req = urllib.request.Request(
+        LLAMA_CHAT,
+        data=request,
+        headers={"Content-Type": "application/json"},
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=600) as response:
+            result = json.loads(response.read())
+        answer = result["choices"][0]["message"]["content"]
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, KeyError, json.JSONDecodeError) as exc:
+        raise SystemExit(f"Local Qwen request failed: {exc}")
+
+    stamp = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+    out = LOG_DIR / f"analysis-{stamp}.md"
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    report = (
+        f"# Operator-memory analysis\n\n"
+        f"**Time:** {now()}\n\n"
+        f"**Question:** {question}\n\n"
+        f"## Evidence\n\n```json\n{packet}\n```\n\n"
+        f"## Qwen response\n\n{answer}\n"
+    )
+    out.write_text(report, encoding="utf-8")
+    with connect() as con:
+        con.execute(
+            "INSERT INTO analyses(question,evidence_json,response,model,created_at) VALUES(?,?,?,?,?)",
+            (question, packet, answer, LLAMA_MODEL, now()),
+        )
+
+    print(answer)
+    print(f"\nSaved analysis: {out}")
+
+def show_status() -> None:
+    with connect() as con:
+        sources = con.execute("SELECT COUNT(*) FROM sources").fetchone()[0]
+        events = con.execute("SELECT COUNT(*) FROM events").fetchone()[0]
+        vectors = con.execute("SELECT COUNT(*) FROM embeddings").fetchone()[0]
+        analyses = con.execute("SELECT COUNT(*) FROM analyses").fetchone()[0]
+    print("=== OPERATOR MEMORY STATUS ===")
+    print(f"Database:  {DB}")
+    print(f"Sources:   {sources}")
+    print(f"Events:    {events}")
+    print(f"Vectors:   {vectors}")
+    print(f"Analyses:  {analyses}")
+    print(f"Embedding model: {EMBED_MODEL}")
+    print(f"Local reviewer:  {LLAMA_MODEL} at {LLAMA_CHAT}")
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Safe local operator-memory ingestion, retrieval, and review."
+    )
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    p_import = sub.add_parser("import", help="Import and redact one report/log file")
+    p_import.add_argument("path", type=Path)
+    p_import.add_argument("--label", default="manual-import")
+
+    p_embed = sub.add_parser("embed", help="Create local embeddings for imported events")
+    p_embed.add_argument("--limit", type=int, default=250)
+
+    p_search = sub.add_parser("search", help="Search imported evidence")
+    p_search.add_argument("query")
+    p_search.add_argument("--limit", type=int, default=8)
+
+    p_ask = sub.add_parser("ask", help="Ask local Qwen using retrieved evidence only")
+    p_ask.add_argument("question")
+    p_ask.add_argument("--limit", type=int, default=8)
+
+    sub.add_parser("status", help="Show database counts and configured models")
+    args = parser.parse_args()
+
+    init_db()
+    if args.command == "import":
+        import_file(args.path.expanduser(), args.label)
+    elif args.command == "embed":
+        embed_pending(args.limit)
+    elif args.command == "search":
+        show_search(args.query, args.limit)
+    elif args.command == "ask":
+        ask_local(args.question, args.limit)
+    elif args.command == "status":
+        show_status()
+
+if __name__ == "__main__":
+    main()

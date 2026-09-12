@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+case "${1:-help}" in
+  health)
+    optiplex-health
+    ;;
+  backup)
+    backup-core-dbs
+    ;;
+  git)
+    live-workspace-report
+    ;;
+  daily)
+    daily-wisdom-check
+    ;;
+  logs)
+    log-compost status
+    ;;
+  memory)
+    shift
+    operator-memory "$@"
+    ;;
+  help|-h|--help)
+    cat <<'HELP'
+STACK: safe OptiPlex operating commands
+
+  stack health
+      Inspect disk, RAM, local services, and database integrity.
+
+  stack backup
+      Make SQLite-safe recovery copies of the three core databases.
+
+  stack git
+      Audit only the three confirmed live Git workspaces.
+
+  stack daily
+      Save one health + operator-memory + Git summary report.
+
+  stack logs
+      Show log-compost storage state.
+
+  stack memory status
+      Show local learning database counts.
+
+  stack memory search "words"
+      Search imported, redacted learning evidence.
+
+  stack memory ask "question" --limit 3
+      Ask local Qwen using bounded retrieved evidence.
+
+Safety:
+  These commands do not delete files, stage, commit, reset, clean,
+  push, pull, rescan your full disk, or rebuild embeddings.
+HELP
+    ;;
+  *)
+    echo "Unknown command: $1" >&2
+    echo "Run: stack help" >&2
+    exit 2
+    ;;
+esac

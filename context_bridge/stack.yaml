@@ -1,0 +1,27 @@
+database: /home/jesse/knowledge-node/knowledge.db
+
+retrieval:
+  fts_enabled: true
+  vector_enabled: true
+  top_k_fts: 12
+  top_k_vector: 12
+  final_context_chunks: 8
+  max_context_characters: 24000
+
+embedding:
+  provider: local
+  model: nomic-embed-text
+  dimensions: null
+
+generation:
+  default_provider: local
+  local_model: qwen2.5-coder-7b
+  fallbacks:
+    - openrouter
+    - gemini
+
+logging:
+  directory: /home/jesse/wisdom-scaffold/logs/rag
+  save_query: true
+  save_retrieval_manifest: true
+  save_model_response_metadata: true

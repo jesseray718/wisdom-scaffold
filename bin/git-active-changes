@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+OUT_DIR="$HOME/wisdom-scaffold/logs/git-fleet"
+STAMP="$(date +%Y%m%d-%H%M%S)"
+REPORT="$OUT_DIR/active-changes-${STAMP}.txt"
+
+ROOTS=(
+  "$HOME/wisdom-scaffold"
+  "$HOME/openroot"
+  "$HOME/une"
+  "$HOME/aerocement"
+  "$HOME/agape-primitives"
+  "$HOME/agapenet"
+  "$HOME/kai-memory"
+  "$HOME/black-locust-rmh"
+  "$HOME/civilization2.0"
+)
+
+mkdir -p "$OUT_DIR"
+
+{
+  echo "ACTIVE GIT CHANGE REPORT"
+  echo "Generated: $(date -Is)"
+  echo
+
+  for repo in "${ROOTS[@]}"; do
+    [ -d "$repo/.git" ] || continue
+
+    status="$(git -C "$repo" status --short --untracked-files=normal)"
+    [ -n "$status" ] || continue
+
+    echo "================================================================"
+    echo "REPOSITORY: $repo"
+    echo "BRANCH: $(git -C "$repo" branch --show-current 2>/dev/null || echo detached)"
+    echo
+
+    echo "--- STAGED: next commit ---"
+    git -C "$repo" diff --cached --name-status
+    echo
+
+    echo "--- UNSTAGED: tracked edits/deletions ---"
+    git -C "$repo" diff --name-status
+    echo
+
+    echo "--- UNTRACKED: new files ---"
+    git -C "$repo" ls-files --others --exclude-standard
+    echo
+  done
+
+  echo "================================================================"
+  echo "Report complete."
+} | tee "$REPORT"
+
+printf '\nSaved compact report: %s\n' "$REPORT"

@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+echo "=== OPTIPLEX HEALTH ==="
+echo "Time: $(date -Is)"
+echo "Host: $(hostname)"
+echo
+echo "--- Storage ---"
+df -h "$HOME"
+echo
+echo "--- Memory ---"
+free -h
+echo
+echo "--- Services/processes ---"
+pgrep -af 'llama-server|ollama serve|syncthing' || true
+echo
+echo "--- Local AI endpoints ---"
+curl -fsS --max-time 3 http://127.0.0.1:11434/api/tags >/dev/null \
+  && echo "OK: Ollama 11434" \
+  || echo "WARN: Ollama unavailable"
+curl -fsS --max-time 3 http://127.0.0.1:8080/health >/dev/null \
+  && echo "OK: llama-server 8080" \
+  || echo "WARN: llama-server health unavailable"
+echo
+echo "--- Databases ---"
+for db in \
+  "$HOME/knowledge-node/knowledge.db" \
+  "$HOME/wisdom-scaffold/data/optiplex_index.db" \
+  "$HOME/wisdom-scaffold/data/operator_memory.db"
+do
+  if [ -f "$db" ]; then
+    echo "DB: $db"
+    sqlite3 "$db" "PRAGMA integrity_check;" 2>/dev/null || true
+  else
+    echo "MISSING: $db"
+  fi
+done
