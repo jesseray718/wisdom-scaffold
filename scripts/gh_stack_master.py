@@ -11,19 +11,23 @@ BAD_SUFFIX = (".sqlite", ".sqlite-wal", ".sqlite-shm", ".db", ".db-wal", ".db-sh
 FAIL_STATES = {"FAILURE", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED", "STARTUP_FAILURE", "STALE"}
 
 def gh(args, cwd=None):
+    """Run a GitHub CLI command and capture its text output."""
     return subprocess.run(["gh", *args], cwd=str(cwd) if cwd else None, text=True, capture_output=True)
 
 def die(msg):
+    """Print a failure message and terminate with exit status 1."""
     print("FAIL", msg)
     raise SystemExit(1)
 
 def must_gh():
+    """Terminate unless the GitHub CLI reports an authenticated session."""
     p = gh(["auth", "status"])
     if p.returncode != 0:
         print(p.stderr)
         die("gh not authenticated")
 
 def repo_names():
+    """Return the names of up to 200 repositories owned by the configured user."""
     p = gh(["repo", "list", OWNER, "--limit", "200", "--json", "name"])
     if p.returncode != 0:
         print(p.stderr)
@@ -31,6 +35,7 @@ def repo_names():
     return [r["name"] for r in json.loads(p.stdout)]
 
 def classify_pr(repo, number):
+    """Return a pull request's safety verdict and the evidence used to derive it."""
     p = gh([
         "pr", "view", str(number),
         "--repo", OWNER + "/" + repo,
@@ -88,6 +93,7 @@ def classify_pr(repo, number):
     }
 
 def cmd_scan():
+    """Scan open pull requests and write their safe and unsafe verdicts to JSON."""
     must_gh()
     names = repo_names()
     print("repos", len(names))
@@ -116,6 +122,7 @@ def cmd_scan():
     return 0
 
 def cmd_open_stack_pr():
+    """Create the stack branch pull request unless one already exists."""
     must_gh()
     if not (WISDOM / ".git").exists():
         die("no wisdom-scaffold")
@@ -144,6 +151,7 @@ def cmd_open_stack_pr():
     return 0
 
 def cmd_apply(limit):
+    """Squash-merge up to ``limit`` candidates that remain safe on recheck."""
     must_gh()
     scan_path = Path("/home/jesse/wisdom-recovery/census-20260904/gh_pr_scan.json")
     if not scan_path.is_file():
@@ -174,6 +182,7 @@ def cmd_apply(limit):
     return 0
 
 def main():
+    """Parse command-line arguments and dispatch the requested operation."""
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("scan")

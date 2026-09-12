@@ -36,13 +36,16 @@ IGNORE_LINES = [
 NEVER_ADD_SUFFIX = (".sqlite", ".sqlite-wal", ".sqlite-shm", ".db", ".db-wal", ".db-shm", ".tar.gz")
 
 def run(args, cwd=None):
+    """Run a subprocess and capture its text output."""
     return subprocess.run(args, cwd=str(cwd) if cwd else None, text=True, capture_output=True)
 
 def die(msg):
+    """Print a failure message and terminate with exit status 1."""
     print("FAIL", msg)
     raise SystemExit(1)
 
 def cmd_status():
+    """Print branch, commit, and working-tree status for the configured repositories."""
     print("kit_canon kit")
     print("kit_path", OPENROOT / "kit")
     print("twin_path", OPENROOT / "openroot-kit")
@@ -60,6 +63,7 @@ def cmd_status():
     return 0
 
 def cmd_write_ignore_draft():
+    """Write the proposed stack ignore rules to the recovery census directory."""
     CENSUS.mkdir(parents=True, exist_ok=True)
     p = CENSUS / "gitignore.draft"
     p.write_text("\n".join(["# draft"] + IGNORE_LINES) + "\n", encoding="utf-8")
@@ -68,6 +72,7 @@ def cmd_write_ignore_draft():
     return 0
 
 def cmd_recreate(dest):
+    """Clone missing repositories, update their ignores, and write stack notes to ``dest``."""
     dest.mkdir(parents=True, exist_ok=True)
     for name, url in REMOTES.items():
         target = dest / name
@@ -98,6 +103,7 @@ def cmd_recreate(dest):
     return 0
 
 def cmd_commit_self():
+    """Copy, stage, and commit only this helper on the configured stack branch."""
     if not (WISDOM / ".git").exists():
         die("no wisdom-scaffold git")
     src = Path(__file__).resolve()
@@ -131,6 +137,7 @@ def cmd_commit_self():
     return 0
 
 def cmd_push_self():
+    """Push the stack branch to origin when the index has no staged changes."""
     p = run(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=WISDOM)
     if p.stdout.strip() != BRANCH:
         die("not on " + BRANCH + " (on " + p.stdout.strip() + ")")
@@ -145,6 +152,7 @@ def cmd_push_self():
     return 0
 
 def main():
+    """Parse command-line arguments and dispatch the requested operation."""
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("status")
