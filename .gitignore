@@ -53,3 +53,5 @@ vendor_archive/
 __pycache__/
 *.db
 .aider*
+*.sqlite
+build/
