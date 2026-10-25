@@ -1,1 +1,0 @@
-/data/data/com.termux/files/home/une/meta_hub/une/computational_flow/drill_scheduler.sh
