@@ -18,7 +18,6 @@ data/
 ENDOFBRIDGE
 fair/*.jsonl
 *.gguf
-<<<<<<< HEAD
 *.key
 # Large Binaries
 ledger/live
@@ -27,7 +26,6 @@ ledger/live
 *.log
 logs/
 meta_hub/
->>>>>>> origin/main
 *.pem
 *.pt
 *.pth
