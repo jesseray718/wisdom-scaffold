@@ -4,6 +4,11 @@ on:
   pull_request:
     paths:
       - 'wisdom/**'
+      - '.github/workflows/validate-wisdom.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   validate:
@@ -12,46 +17,45 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate JSON structure
         run: |
-          python3 -c "
-import json, sys
+          python3 - <<'PY'
+          import json
+          import sys
 
-with open('wisdom/wisdom_corpus.json') as f:
-    corpus = json.load(f)
+          with open('wisdom/wisdom_corpus.json', encoding='utf-8') as handle:
+              corpus = json.load(handle)
 
-errors = []
+          errors = []
+          required_keys = [
+              'meta', 'foundation_layer', 'design_layer_permaculture',
+              'synergy_layer_buckminster_fuller',
+          ]
+          for key in required_keys:
+              if key not in corpus:
+                  errors.append(f'Missing top-level key: {key}')
 
-# Check required top-level keys
-required_keys = ['meta', 'foundation_layer', 'design_layer_permaculture', 'synergy_layer_buckminster_fuller']
-for key in required_keys:
-    if key not in corpus:
-        errors.append(f'Missing top-level key: {key}')
+          if 'meta' in corpus:
+              meta = corpus['meta']
+              for field in ['version', 'license', 'principle']:
+                  if field not in meta:
+                      errors.append(f'Missing meta field: {field}')
 
-# Check meta fields
-if 'meta' in corpus:
-    meta = corpus['meta']
-    for field in ['version', 'license', 'principle']:
-        if field not in meta:
-            errors.append(f'Missing meta field: {field}')
+          def check_ids(obj, path=''):
+              if isinstance(obj, list):
+                  for i, item in enumerate(obj):
+                      if isinstance(item, dict):
+                          if 'id' not in item and 'source' in item:
+                              errors.append(f'{path}[{i}] missing id field')
+                      check_ids(item, f'{path}[{i}]')
+              elif isinstance(obj, dict):
+                  for key, value in obj.items():
+                      check_ids(value, f'{path}.{key}')
 
-# Check all entries have IDs
-def check_ids(obj, path=''):
-    if isinstance(obj, list):
-        for i, item in enumerate(obj):
-            if isinstance(item, dict):
-                if 'id' not in item and 'source' in item:
-                    errors.append(f'{path}[{i}] missing id field')
-            check_ids(item, f'{path}[{i}]')
-    elif isinstance(obj, dict):
-        for k, v in obj.items():
-            check_ids(v, f'{path}.{k}')
+          check_ids(corpus)
 
-check_ids(corpus)
-
-if errors:
-            print('❌ Validation errors:')
-            for e in errors:
-                print(f'  - {e}')
-            sys.exit(1)
-else:
-            print('✅ All wisdom entries valid')
-"
+          if errors:
+              print('Validation errors:')
+              for error in errors:
+                  print(f'  - {error}')
+              sys.exit(1)
+          print('All wisdom entries valid')
+          PY
